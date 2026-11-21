@@ -1,0 +1,25 @@
+# =============================================================================
+# 711ACKS — SUPABASE EDGE FUNCTIONS CONFIGURATION
+# =============================================================================
+# Pre-authentication endpoints run BEFORE a browser user JWT exists and accept
+# either legacy JWT anon keys or newer opaque sb_publishable_* keys.
+# Authenticated admin endpoints perform explicit `userClient.auth.getUser()`
+# and `is_verified_admin()` validation inside each function handler.
+
+[functions.admin-auth-initiate]
+verify_jwt = false
+
+[functions.admin-auth-resend]
+verify_jwt = false
+
+[functions.admin-auth-verify]
+verify_jwt = false
+
+[functions.admin-auth-complete-recovery]
+verify_jwt = false
+
+[functions.admin-auth-logout]
+verify_jwt = true
+
+[functions.approve-community-submission]
+verify_jwt = true

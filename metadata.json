@@ -1,0 +1,6 @@
+{
+  "name": "711acks",
+  "description": "An independent, fan-made digital collection of creative drink combinations made exclusively from products available at 7-Eleven Philippines.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
