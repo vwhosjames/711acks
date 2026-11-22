@@ -27,9 +27,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <p className="text-sm text-[#C9C5B8] max-w-md leading-relaxed">
               An independent, fan-made digital collection of creative drink combinations made exclusively from products available at 7-Eleven Philippines.
             </p>
-            <p className="text-xs text-[#C9C5B8]/80 max-w-lg leading-relaxed">
-              <strong className="text-[#F5F3EC]">Independent Brand Disclaimer:</strong> 711acks is a personal portfolio project and is NOT officially affiliated with, sponsored by, operated by, or endorsed by 7-Eleven, Inc. or Philippine Seven Corporation. All product names and trademarks belong to their respective owners.
-            </p>
           </div>
 
           {/* Public Navigation Links */}

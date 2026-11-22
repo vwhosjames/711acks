@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, Sun, Moon } from 'lucide-react';
+import { ArrowRight, Flashlight, Moon } from 'lucide-react';
 import { PublicRoute } from './Navbar';
 import {
   HERO_SCENE_ASSETS,
@@ -22,6 +22,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [sceneMode, setSceneMode] = useState<HeroSceneMode>('night');
   const [spotlightRadius, setSpotlightRadius] = useState<number>(230);
+  const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
   const centerSpotlight = useCallback(() => {
     if (!containerRef.current) return;
@@ -63,6 +64,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    setHasInteracted(true);
     setIsSpotlightVisible(true);
     updateCoordinates(e.clientX, e.clientY);
   };
@@ -78,6 +80,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
   const handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
     if (e.touches.length > 0) {
+      setHasInteracted(true);
       setIsSpotlightVisible(true);
       updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
     }
@@ -85,12 +88,14 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     if (e.touches.length > 0) {
+      setHasInteracted(true);
       setIsSpotlightVisible(true);
       updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
   const handleToggleSceneMode = () => {
+    setHasInteracted(true);
     const nextMode = getNextHeroSceneMode(sceneMode);
     setSceneMode(nextMode);
     if (nextMode === 'day') {
@@ -120,7 +125,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       aria-label="711acks Interactive Storefront Hero"
-      className="relative w-full min-h-[580px] lg:min-h-[680px] bg-[#17201B] overflow-hidden select-none flex items-end"
+      className="relative w-full min-h-[580px] lg:min-h-[680px] bg-[#17201B] overflow-hidden select-none touch-pan-y flex items-end"
     >
       {/* LAYER 1: Active Base Scene Background — Night (default) or Full Daytime (mounted identically to avoid flicker or shift) */}
       <div
@@ -212,7 +217,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
           {/* Main headline: exact copy from Section 4 */}
           <h1
-            className="font-display font-extralight uppercase tracking-[0.14em] text-[#FFFFFF] leading-[1.05]"
+            className="font-display font-extralight uppercase tracking-[0.14em] text-[#FFFFFF] leading-[1.05] text-balance"
             style={{
               fontSize: 'clamp(2.5rem, 5.2vw, 4.5rem)',
               textShadow: '0 4px 28px rgba(0, 0, 0, 0.65)',
@@ -223,8 +228,8 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
           </h1>
 
           {/* Supporting text: exact copy from Section 4 */}
-          <p className="text-base sm:text-lg text-[#F5F3EC]/90 font-normal leading-relaxed max-w-xl">
-            Discover creative drink combinations made with your favorite 7-Eleven Philippines products.
+          <p className="text-base sm:text-lg text-[#F5F3EC]/90 font-normal leading-relaxed max-w-[48ch] text-balance">
+            Discover creative drink combinations made with your favorite 7&#8209;Eleven Philippines products.
           </p>
 
           {/* Hero CTA Buttons: exact copy from Section 4 */}
@@ -248,32 +253,42 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
           </div>
         </div>
 
-        {/* Touch-friendly / Accessibility Day-Night Reveal Control */}
+        {/* Compact Floating Flashlight Toggle & Auto-Hiding Tooltip at Bottom-Right */}
         <div
           onMouseMove={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
-          className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-3 bg-[#17201B]/80 backdrop-blur-md border border-[#294735] px-4 py-3 rounded-md"
+          className="relative self-end shrink-0 group flex items-center justify-end"
         >
-          <div className="text-xs text-[#C9C5B8]">
-            <span className="text-[#D7E07A] font-medium">Interactive Flashlight:</span> {activeScene.hintText}
+          <div
+            role="tooltip"
+            className={`pointer-events-none absolute bottom-full right-0 mb-2.5 w-max max-w-[230px] sm:max-w-none sm:whitespace-nowrap px-3 py-1.5 rounded-md bg-[#17201B]/90 backdrop-blur-md border border-[#294735] text-[11px] text-[#F5F3EC] shadow-lg transition-opacity duration-300 ${
+              hasInteracted
+                ? 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
+                : 'opacity-100'
+            }`}
+          >
+            {isDaytimeMode
+              ? 'Move your cursor to reveal sunset view'
+              : 'Move your cursor to reveal daytime view'}
           </div>
+
           <button
             type="button"
             onClick={handleToggleSceneMode}
             aria-pressed={isDaytimeMode}
-            className="px-3 py-1.5 text-xs font-medium rounded border border-[#D7E07A]/50 text-[#F5F3EC] hover:bg-[#294735] transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 cursor-pointer"
+            aria-label={activeScene.toggleLabel}
+            title={
+              isDaytimeMode
+                ? 'Move your cursor to reveal sunset view'
+                : 'Move your cursor to reveal daytime view'
+            }
+            className="w-11 h-11 rounded-full bg-[#17201B]/85 backdrop-blur-md border border-[#294735] hover:border-[#D7E07A] text-[#D7E07A] hover:bg-[#294735] shadow-lg transition-colors flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A]"
           >
             {isDaytimeMode ? (
-              <>
-                <Moon className="w-3.5 h-3.5 text-[#D7E07A]" />
-                <span>{activeScene.toggleLabel}</span>
-              </>
+              <Moon className="w-4 h-4" />
             ) : (
-              <>
-                <Sun className="w-3.5 h-3.5 text-[#D7E07A]" />
-                <span>{activeScene.toggleLabel}</span>
-              </>
+              <Flashlight className="w-4 h-4" />
             )}
           </button>
         </div>
