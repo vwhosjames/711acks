@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AlertTriangle, RefreshCw, RotateCcw, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { APPROVED_CATEGORIES, DrinkCategory, SortOption } from '../types/domain';
@@ -12,6 +12,13 @@ interface ExplorePageProps {
   onNavigate: (route: PublicRoute) => void;
 }
 
+function resolveValidCategory(category?: string): DrinkCategory | 'ALL' {
+  if (category && (APPROVED_CATEGORIES as string[]).includes(category)) {
+    return category as DrinkCategory;
+  }
+  return 'ALL';
+}
+
 export const ExplorePage: React.FC<ExplorePageProps> = ({
   initialCategory,
   initialSearch = '',
@@ -20,16 +27,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
   const { recipes, isLoadingData, dataError, refreshPublicData } = useApp();
 
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
-  const [selectedCategory, setSelectedCategory] = useState<DrinkCategory | 'ALL'>(() => {
-    if (
-      initialCategory &&
-      (APPROVED_CATEGORIES as string[]).includes(initialCategory)
-    ) {
-      return initialCategory as DrinkCategory;
-    }
-    return 'ALL';
-  });
+  const [selectedCategory, setSelectedCategory] = useState<DrinkCategory | 'ALL'>(() =>
+    resolveValidCategory(initialCategory)
+  );
   const [sortBy, setSortBy] = useState<SortOption>('newest');
+
+  useEffect(() => {
+    setSelectedCategory(resolveValidCategory(initialCategory));
+  }, [initialCategory]);
+
+  useEffect(() => {
+    setSearchQuery(initialSearch);
+  }, [initialSearch]);
 
   const filteredRecipes = filterAndSortRecipes(recipes, {
     searchQuery,

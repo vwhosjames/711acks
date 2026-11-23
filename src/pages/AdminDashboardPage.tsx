@@ -11,14 +11,14 @@ import {
   KeyRound,
   Lock,
   LogOut,
+  Menu,
   Plus,
   QrCode,
   RefreshCw,
   ShieldCheck,
-  Sun,
-  Moon,
   Trash2,
   Upload,
+  X,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useApp } from '../context/AppContext';
@@ -38,29 +38,18 @@ import {
 import { validateAndOptimizeImageFile } from '../lib/supabaseClient';
 import { isRelativeStoragePath } from '../lib/supabaseStorage';
 import { PublicRoute } from '../components/Navbar';
+import { AdminModule, AdminView } from '../lib/adminRoutes';
 
 interface AdminDashboardPageProps {
+  activeView: AdminView;
   onNavigate: (route: PublicRoute) => void;
 }
 
-type AdminModule =
-  | 'overview'
-  | 'recipes'
-  | 'submissions'
-  | 'products'
-  | 'reports'
-  | 'qrcodes'
-  | 'revisions'
-  | 'backups'
-  | 'maintenance'
-  | 'settings';
-
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
+  activeView,
   onNavigate,
 }) => {
   const {
-    theme,
-    toggleTheme,
     products,
     priceHistory,
     recipes,
@@ -118,9 +107,17 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   const [isResendingOtp, setIsResendingOtp] = useState(false);
   const [resendCooldownSeconds, setResendCooldownSeconds] = useState(0);
 
-  // Active dashboard module
-  const [activeModule, setActiveModule] = useState<AdminModule>('overview');
+  // Active dashboard module derived from dedicated /admin/* route
+  const activeModule: AdminModule =
+    activeView === 'login' ? 'overview' : activeView;
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [remainingSeconds, setRemainingSeconds] = useState<number>(1800);
+
+  const navigateAdminModule = (mod: AdminModule) => {
+    setMobileSidebarOpen(false);
+    onNavigate({ page: 'admin', adminView: mod });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Recipe Management Form State
   const [editingRecipeId, setEditingRecipeId] = useState<string | null>(null);
@@ -554,43 +551,43 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   };
 
   // ============================================================================
-  // RENDER GATE: TWO-FACTOR EMAIL OTP AUTHENTICATION (Section 13)
+  // RENDER GATE: TWO-FACTOR EMAIL OTP AUTHENTICATION (Section 13 — /admin/login)
   // ============================================================================
   if (!adminSession) {
     return (
-      <div className="min-h-screen bg-[#17201B] text-[#F5F3EC] py-16 px-6 flex flex-col justify-center">
+      <div className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] py-12 sm:py-16 px-6 flex flex-col justify-center transition-colors">
         <div className="max-w-md mx-auto w-full space-y-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <button
               type="button"
               onClick={() => onNavigate({ page: 'home' })}
-              className="text-xs font-semibold uppercase tracking-wider text-[#D7E07A] hover:underline flex items-center gap-1.5 cursor-pointer"
+              className="min-h-[44px] sm:min-h-0 text-xs font-semibold uppercase tracking-wider text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Return to Public Site</span>
             </button>
-            <span className="font-mono-tabular text-xs text-[#C9C5B8]">
+            <span className="font-mono-tabular text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
               No Public Signup
             </span>
           </div>
 
-          <div className="p-8 bg-[#1E2B23] border border-[#294735] rounded-md space-y-6">
+          <div className="p-6 sm:p-8 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/80 dark:border-[#294735] rounded-md space-y-6 shadow-sm">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-mono-tabular uppercase tracking-widest text-[#D7E07A]">
+              <div className="flex items-center gap-2 text-xs font-mono-tabular uppercase tracking-widest text-[#294735] dark:text-[#D7E07A]">
                 <Lock className="w-4 h-4" />
                 <span>OWNER AUTHENTICATION + 2FA OTP</span>
               </div>
               <h1 className="font-display text-2xl font-light uppercase tracking-wider">
                 711acks Admin Console
               </h1>
-              <p className="text-xs text-[#C9C5B8] leading-relaxed">
+              <p className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed">
                 Protected by two-step authentication. An unrestricted session is never released until both password verification and the 6-digit one-time challenge succeed.
               </p>
             </div>
 
             {isLiveSupabase && (
-              <div className="p-3.5 bg-[#17201B] border border-[#294735] rounded text-xs text-[#C9C5B8] space-y-1">
-                <div className="font-semibold text-[#D7E07A]">
+              <div className="p-3.5 bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8]/70 dark:border-[#294735] rounded text-xs text-[#17201B]/80 dark:text-[#C9C5B8] space-y-1">
+                <div className="font-semibold text-[#294735] dark:text-[#D7E07A]">
                   Server-Side Email OTP Active (Live Mode)
                 </div>
                 <p>
@@ -602,7 +599,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             {sessionExpiredReason && (
               <div
                 role="status"
-                className="p-3.5 bg-amber-950/60 border border-amber-500/60 rounded text-xs text-amber-200"
+                className="p-3.5 bg-amber-50 dark:bg-amber-950/60 border border-amber-500/60 rounded text-xs text-amber-900 dark:text-amber-200"
               >
                 {sessionExpiredReason}
               </div>
@@ -611,20 +608,20 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             {authError && (
               <div
                 role="alert"
-                className="p-3.5 bg-red-950/60 border border-red-500/60 rounded text-xs text-red-200"
+                className="p-3.5 bg-red-50 dark:bg-red-950/60 border border-red-500/60 rounded text-xs text-red-800 dark:text-red-200"
               >
                 {authError}
               </div>
             )}
 
             {authNotice && (
-              <div className="p-3.5 bg-[#294735]/60 border border-[#D7E07A]/50 rounded text-xs text-[#F5F3EC]">
+              <div className="p-3.5 bg-[#294735]/10 dark:bg-[#294735]/60 border border-[#294735]/40 dark:border-[#D7E07A]/50 rounded text-xs text-[#17201B] dark:text-[#F5F3EC]">
                 {authNotice}
               </div>
             )}
 
             {lockoutUntil && lockoutUntil > Date.now() && (
-              <div className="p-3.5 bg-amber-950/60 border border-amber-500/60 rounded text-xs text-amber-200">
+              <div className="p-3.5 bg-amber-50 dark:bg-amber-950/60 border border-amber-500/60 rounded text-xs text-amber-900 dark:text-amber-200">
                 Login rate-limit lockout is active due to repeated failed attempts.
               </div>
             )}
@@ -632,11 +629,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             {/* STEP 0: Complete Password Recovery (Live recovery link; never bypasses OTP) */}
             {pendingPasswordRecovery ? (
               <form onSubmit={handleCompletePasswordRecovery} className="space-y-4">
-                <div className="p-3.5 bg-[#17201B] border border-[#D7E07A]/50 rounded text-xs space-y-1.5">
-                  <div className="font-semibold text-[#D7E07A]">
+                <div className="p-3.5 bg-[#F5F3EC] dark:bg-[#17201B] border border-[#294735]/40 dark:border-[#D7E07A]/50 rounded text-xs space-y-1.5">
+                  <div className="font-semibold text-[#294735] dark:text-[#D7E07A]">
                     Complete Owner Password Reset
                   </div>
-                  <p className="text-[#C9C5B8]">
+                  <p className="text-[#17201B]/80 dark:text-[#C9C5B8]">
                     Set a new strong administrator password (at least 12 characters with uppercase, lowercase, a number, and a symbol). After updating your password, you must complete full Password + 6-digit Email OTP sign-in.
                   </p>
                 </div>
@@ -658,7 +655,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     value={recoveryNewPassword}
                     onChange={(e) => setRecoveryNewPassword(e.target.value)}
                     placeholder="Min 12 chars, upper/lower/number/symbol"
-                    className="w-full px-3.5 py-2.5 text-sm bg-[#17201B] border border-[#294735] rounded text-[#F5F3EC] disabled:opacity-60"
+                    className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                   />
                 </div>
 
@@ -679,11 +676,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     value={recoveryConfirmPassword}
                     onChange={(e) => setRecoveryConfirmPassword(e.target.value)}
                     placeholder="Re-enter new owner password"
-                    className="w-full px-3.5 py-2.5 text-sm bg-[#17201B] border border-[#294735] rounded text-[#F5F3EC] disabled:opacity-60"
+                    className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <button
                     type="button"
                     disabled={isAuthSubmitting}
@@ -693,14 +690,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       setAuthError('');
                       cancelPasswordRecovery();
                     }}
-                    className="text-xs text-[#C9C5B8] underline cursor-pointer disabled:opacity-50"
+                    className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] underline underline-offset-4 cursor-pointer disabled:opacity-50"
                   >
-                    Cancel & Return to Login
+                    Cancel &amp; Return to Login
                   </button>
                   <button
                     type="submit"
                     disabled={isAuthSubmitting}
-                    className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#D7E07A] text-[#17201B] rounded cursor-pointer disabled:opacity-60"
+                    className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded cursor-pointer disabled:opacity-60"
                   >
                     {isAuthSubmitting ? 'Updating Password...' : 'Update Owner Password'}
                   </button>
@@ -723,7 +720,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       disabled={isAuthSubmitting}
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#17201B] border border-[#294735] rounded text-[#F5F3EC] disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-3">
@@ -731,14 +728,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       type="button"
                       disabled={isAuthSubmitting}
                       onClick={() => setShowRecoveryForm(false)}
-                      className="text-xs text-[#C9C5B8] underline cursor-pointer disabled:opacity-50"
+                      className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] underline underline-offset-4 cursor-pointer disabled:opacity-50"
                     >
                       Back to Login
                     </button>
                     <button
                       type="submit"
                       disabled={isAuthSubmitting}
-                      className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#D7E07A] text-[#17201B] rounded cursor-pointer disabled:opacity-60"
+                      className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded cursor-pointer disabled:opacity-60"
                     >
                       {isAuthSubmitting ? 'Sending...' : 'Send Recovery Email'}
                     </button>
@@ -762,7 +759,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       placeholder="owner@yourdomain.com"
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#17201B] border border-[#294735] rounded text-[#F5F3EC] disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
 
@@ -782,13 +779,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Enter owner password"
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#17201B] border border-[#294735] rounded text-[#F5F3EC] disabled:opacity-60"
+                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
 
                   {!isLiveSupabase && (
-                    <div className="p-3 bg-[#17201B] border border-[#294735] rounded text-xs text-[#C9C5B8] space-y-1">
-                      <div className="text-[#D7E07A] font-semibold">
+                    <div className="p-3 bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8]/70 dark:border-[#294735] rounded text-xs text-[#17201B]/80 dark:text-[#C9C5B8] space-y-1">
+                      <div className="text-[#294735] dark:text-[#D7E07A] font-semibold">
                         Portfolio Preview Credential Info:
                       </div>
                       <div>
@@ -804,7 +801,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                           setLoginEmail('admin@711acks.ph');
                           setLoginPassword('Midnight711!Hacks');
                         }}
-                        className="mt-1 text-xs text-[#D7E07A] underline cursor-pointer"
+                        className="mt-1 text-xs text-[#294735] dark:text-[#D7E07A] underline underline-offset-4 cursor-pointer"
                       >
                         Auto-fill preview credentials
                       </button>
@@ -814,7 +811,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   <button
                     type="submit"
                     disabled={isAuthSubmitting}
-                    className="w-full py-3 text-xs font-semibold uppercase tracking-wider bg-[#D7E07A] text-[#17201B] rounded hover:bg-[#e2ea8b] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full py-3 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded hover:opacity-90 transition-opacity cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isAuthSubmitting
                       ? 'Verifying Credentials & Sending Code...'
@@ -826,7 +823,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       type="button"
                       disabled={isAuthSubmitting}
                       onClick={() => setShowRecoveryForm(true)}
-                      className="text-xs text-[#C9C5B8] hover:text-[#D7E07A] underline cursor-pointer disabled:opacity-50"
+                      className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] hover:text-[#294735] dark:hover:text-[#D7E07A] underline underline-offset-4 cursor-pointer disabled:opacity-50"
                     >
                       Forgot password? Request email recovery
                     </button>
@@ -836,12 +833,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             ) : (
               /* STEP 2: Six-Digit Email OTP Second Factor Challenge */
               <form onSubmit={handleOtpSubmit} className="space-y-4">
-                <div className="p-3.5 bg-[#17201B] border border-[#D7E07A]/50 rounded text-xs space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-[#D7E07A] font-semibold">
+                <div className="p-3.5 bg-[#F5F3EC] dark:bg-[#17201B] border border-[#294735]/40 dark:border-[#D7E07A]/50 rounded text-xs space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-[#294735] dark:text-[#D7E07A] font-semibold">
                     <KeyRound className="w-4 h-4" />
                     <span>Step 2 of 2: Six-Digit One-Time Email Code</span>
                   </div>
-                  <p className="text-[#C9C5B8]">
+                  <p className="text-[#17201B]/80 dark:text-[#C9C5B8]">
                     {isLiveSupabase ? (
                       <>
                         A single-use 6-digit verification code has been emailed to{' '}
@@ -857,11 +854,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     )}
                   </p>
                   {!isLiveSupabase && pendingOtpChallenge.demoOtpDisplay && (
-                    <div className="pt-1 text-[#F5F3EC]">
+                    <div className="pt-1 text-[#17201B] dark:text-[#F5F3EC]">
                       Preview Email Dispatch Outbox Code:{' '}
                       <strong
                         data-testid="admin-otp-demo-code"
-                        className="font-mono-tabular text-sm text-[#D7E07A] tracking-widest"
+                        className="font-mono-tabular text-sm text-[#294735] dark:text-[#D7E07A] tracking-widest"
                       >
                         {pendingOtpChallenge.demoOtpDisplay}
                       </strong>
@@ -887,14 +884,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     value={otpInput}
                     onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
                     placeholder="6-digit OTP"
-                    className="w-full px-3.5 py-2.5 text-center font-mono-tabular text-lg tracking-[0.35em] bg-[#17201B] border border-[#294735] rounded text-[#D7E07A] disabled:opacity-60"
+                    className="w-full px-3.5 py-2.5 text-center font-mono-tabular text-lg tracking-[0.35em] bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#294735] dark:text-[#D7E07A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isAuthSubmitting || otpInput.length !== 6}
-                  className="w-full py-3 text-xs font-semibold uppercase tracking-wider bg-[#D7E07A] text-[#17201B] rounded hover:bg-[#e2ea8b] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full py-3 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded hover:opacity-90 transition-opacity cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isAuthSubmitting
                     ? 'Verifying 6-Digit Code...'
@@ -908,7 +905,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       isResendingOtp || isAuthSubmitting || resendCooldownSeconds > 0
                     }
                     onClick={handleResendOtp}
-                    className="text-[#D7E07A] hover:underline cursor-pointer disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed"
+                    className="text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 cursor-pointer disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed"
                   >
                     {isResendingOtp
                       ? 'Sending new code...'
@@ -925,7 +922,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       setAuthNotice('');
                       logoutAdmin('Cancelled OTP challenge.');
                     }}
-                    className="text-[#C9C5B8] hover:underline cursor-pointer disabled:opacity-50"
+                    className="text-[#17201B]/75 dark:text-[#C9C5B8] hover:underline underline-offset-4 cursor-pointer disabled:opacity-50"
                   >
                     Cancel login
                   </button>
@@ -971,79 +968,119 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   return (
     <div
       onClick={touchAdminActivity}
-      className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col"
+      className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col transition-colors"
     >
-      {/* Protected Admin Top Bar */}
-      <header className="bg-[#17201B] text-[#F5F3EC] border-b border-[#294735] px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <span className="font-display text-lg font-light tracking-[0.22em] uppercase text-[#D7E07A]">
-            711ACKS ADMIN
-          </span>
-          <span className="text-xs text-[#C9C5B8] hidden sm:inline">
-            Verified 2FA Session: {adminSession.email}
-          </span>
-        </div>
+      {/* Dedicated Protected Admin Top Bar (No Public Navbar / No Duplicate Theme Toggle) */}
+      <header className="sticky top-0 z-30 bg-[#ECE9DF] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] border-b border-[#C9C5B8] dark:border-[#294735] px-4 sm:px-6 py-3.5 transition-colors">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              type="button"
+              aria-label={mobileSidebarOpen ? 'Close admin navigation' : 'Open admin navigation'}
+              aria-expanded={mobileSidebarOpen}
+              onClick={() => setMobileSidebarOpen((prev) => !prev)}
+              className="lg:hidden min-w-[44px] min-h-[44px] p-2 rounded border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC] hover:border-[#294735] dark:hover:border-[#D7E07A] inline-flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+            >
+              {mobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
 
-        <div className="flex items-center gap-3 text-xs">
-          {/* 30-Minute Inactivity Countdown */}
-          <div
-            className={`px-3 py-1.5 rounded border font-mono-tabular flex items-center gap-1.5 ${
-              remainingSeconds < 180
-                ? 'border-amber-500 text-amber-300 bg-amber-950/40'
-                : 'border-[#294735] text-[#C9C5B8]'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5 text-[#D7E07A]" />
-            <span>
-              Session Timer: {Math.floor(remainingSeconds / 60)}:
-              {(remainingSeconds % 60).toString().padStart(2, '0')}
+            <button
+              type="button"
+              onClick={() => navigateAdminModule('overview')}
+              className="font-display text-lg font-light tracking-[0.22em] uppercase text-[#294735] dark:text-[#D7E07A] whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
+            >
+              711ACKS ADMIN
+            </button>
+
+            <span className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] hidden md:inline truncate">
+              Verified 2FA Session: {adminSession.email}
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle dashboard theme"
-            className="p-2 rounded border border-[#294735] text-[#F5F3EC] hover:border-[#D7E07A] cursor-pointer"
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-[#D7E07A]" />
-            ) : (
-              <Moon className="w-4 h-4 text-[#D7E07A]" />
-            )}
-          </button>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
+            {/* 30-Minute Inactivity Countdown */}
+            <div
+              className={`px-3 py-1.5 rounded border font-mono-tabular flex items-center gap-1.5 ${
+                remainingSeconds < 180
+                  ? 'border-amber-600 dark:border-amber-500 text-amber-900 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/40'
+                  : 'border-[#C9C5B8] dark:border-[#294735] text-[#17201B]/80 dark:text-[#C9C5B8] bg-[#FFFFFF]/70 dark:bg-[#1E2B23]'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5 text-[#294735] dark:text-[#D7E07A]" />
+              <span>
+                Session Timer: {Math.floor(remainingSeconds / 60)}:
+                {(remainingSeconds % 60).toString().padStart(2, '0')}
+              </span>
+            </div>
 
-          <button
-            type="button"
-            onClick={() => onNavigate({ page: 'home' })}
-            className="px-3 py-1.5 rounded border border-[#294735] text-[#F5F3EC] hover:border-[#D7E07A] cursor-pointer"
-          >
-            Public Site
-          </button>
+            <button
+              type="button"
+              onClick={() => onNavigate({ page: 'home' })}
+              className="min-h-[44px] sm:min-h-0 px-3 py-1.5 rounded border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC] hover:border-[#294735] dark:hover:border-[#D7E07A] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+            >
+              Public Site
+            </button>
 
-          <button
-            type="button"
-            onClick={() => logoutAdmin('Administrator signed out.')}
-            className="px-3 py-1.5 rounded bg-red-900/60 text-red-100 border border-red-700/60 hover:bg-red-800 flex items-center gap-1.5 cursor-pointer"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => logoutAdmin('Administrator signed out.')}
+              className="min-h-[44px] sm:min-h-0 px-3 py-1.5 rounded bg-red-700 dark:bg-red-900/70 text-white dark:text-red-100 border border-red-800 dark:border-red-700/60 hover:bg-red-800 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Admin Navigation Drawer */}
+        {mobileSidebarOpen && (
+          <nav
+            aria-label="Admin Mobile Navigation"
+            className="lg:hidden mt-3 pt-3 border-t border-[#C9C5B8]/80 dark:border-[#294735] grid grid-cols-1 sm:grid-cols-2 gap-1.5"
+          >
+            {navModules.map((mod) => {
+              const active = activeModule === mod.id;
+              return (
+                <button
+                  key={mod.id}
+                  type="button"
+                  aria-current={active ? 'page' : undefined}
+                  onClick={() => navigateAdminModule(mod.id)}
+                  className={`min-h-[44px] w-full px-3 py-2 rounded text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] ${
+                    active
+                      ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold'
+                      : 'text-[#17201B] dark:text-[#F5F3EC] bg-[#FFFFFF]/60 dark:bg-[#1E2B23] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40'
+                  }`}
+                >
+                  <span className="truncate">{mod.label}</span>
+                  {typeof mod.count === 'number' && (
+                    <span className="font-mono-tabular text-xs ml-2">
+                      {mod.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        )}
       </header>
 
-      {/* Main Dashboard Layout */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Sidebar Module Navigation */}
-        <aside className="lg:col-span-3 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md p-3 space-y-1">
+      {/* Dedicated Admin Workspace Layout (Separate Sidebar + Main Content, No Public Footer) */}
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Desktop Admin Sidebar Navigation */}
+        <aside
+          aria-label="Admin Sidebar Navigation"
+          className="hidden lg:block lg:col-span-3 sticky top-24 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/70 dark:border-[#294735] rounded-md p-3 space-y-1"
+        >
           {navModules.map((mod) => {
             const active = activeModule === mod.id;
             return (
               <button
                 key={mod.id}
                 type="button"
-                onClick={() => setActiveModule(mod.id)}
-                className={`w-full px-3 py-2.5 rounded text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
+                aria-current={active ? 'page' : undefined}
+                onClick={() => navigateAdminModule(mod.id)}
+                className={`w-full px-3 py-2.5 rounded text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] ${
                   active
                     ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold'
                     : 'text-[#17201B] dark:text-[#F5F3EC] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40'
@@ -1061,7 +1098,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         </aside>
 
         {/* Active Module Workspace */}
-        <main className="lg:col-span-9 space-y-6">
+        <main className="lg:col-span-9 space-y-6 min-w-0">
           {adminDataError && (
             <div
               role="alert"
@@ -1148,7 +1185,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   </div>
                   <button
                     type="button"
-                    onClick={() => setActiveModule('recipes')}
+                    onClick={() => navigateAdminModule('recipes')}
                     className="px-3 py-1.5 text-xs font-semibold bg-amber-500 text-[#17201B] rounded shrink-0 cursor-pointer"
                   >
                     Review Recipes

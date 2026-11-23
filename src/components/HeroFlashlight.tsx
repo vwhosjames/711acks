@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Flashlight, Moon } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 import { PublicRoute } from './Navbar';
 import {
   HERO_SCENE_ASSETS,
@@ -15,14 +16,17 @@ interface HeroFlashlightProps {
 }
 
 export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) => {
+  const { theme, toggleTheme } = useApp();
   const containerRef = useRef<HTMLElement | null>(null);
   // Spotlight coordinates relative to hero container
   const [coords, setCoords] = useState<{ x: number; y: number }>({ x: 520, y: 310 });
   const [isSpotlightVisible, setIsSpotlightVisible] = useState<boolean>(true);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
-  const [sceneMode, setSceneMode] = useState<HeroSceneMode>('night');
   const [spotlightRadius, setSpotlightRadius] = useState<number>(230);
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
+
+  // Unified global Day/Night mode: dark theme = Night Mode, light theme = Day Mode
+  const sceneMode: HeroSceneMode = theme === 'dark' ? 'night' : 'day';
 
   const centerSpotlight = useCallback(() => {
     if (!containerRef.current) return;
@@ -96,16 +100,12 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
   const handleToggleSceneMode = () => {
     setHasInteracted(true);
-    const nextMode = getNextHeroSceneMode(sceneMode);
-    setSceneMode(nextMode);
-    if (nextMode === 'day') {
-      // Show full daytime scene immediately until the user moves pointer/touch across the hero
-      setIsSpotlightVisible(false);
-    } else {
-      // Restore default nighttime + daytime flashlight pairing cleanly
-      centerSpotlight();
-      setIsSpotlightVisible(true);
-    }
+    // Intentional toggle switches the unified global Day/Night theme (pointer movement never changes theme)
+    getNextHeroSceneMode(sceneMode);
+    toggleTheme();
+    // Keep the circular flashlight visible and interactive in both Night (Day reveal) and Day (Sunset reveal) modes
+    centerSpotlight();
+    setIsSpotlightVisible(true);
   };
 
   const activeScene = getHeroSceneConfig(sceneMode);

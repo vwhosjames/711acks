@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { AdminRoute } from '../lib/adminRoutes';
 
 export type PublicRoute =
   | { page: 'home' }
@@ -10,7 +11,7 @@ export type PublicRoute =
   | { page: 'about' }
   | { page: 'contact'; relatedSlug?: string }
   | { page: 'drink-detail'; slug: string }
-  | { page: 'admin' };
+  | AdminRoute;
 
 interface NavbarProps {
   currentRoute: PublicRoute;
@@ -18,7 +19,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
-  const { favorites, theme, toggleTheme } = useApp();
+  const { favorites } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems: { label: string; route: PublicRoute; id: string }[] = [
@@ -42,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
         <button
           type="button"
           onClick={() => handleNav({ page: 'home' })}
-          className="font-display text-xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC] whitespace-nowrap shrink-0 text-left focus-visible:outline-2 focus-visible:outline-[#D7E07A]"
+          className="font-display text-xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC] whitespace-nowrap shrink-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer"
         >
           711ACKS
         </button>
@@ -59,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
                 key={item.id}
                 type="button"
                 onClick={() => handleNav(item.route)}
-                className={`relative py-1 transition-colors whitespace-nowrap shrink-0 hover:text-[#17201B] dark:hover:text-[#FFFFFF] ${
+                className={`relative py-1 transition-colors whitespace-nowrap shrink-0 hover:text-[#17201B] dark:hover:text-[#FFFFFF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
                   isActive
                     ? 'text-[#17201B] dark:text-[#D7E07A] font-semibold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#294735] dark:after:bg-[#D7E07A]'
                     : ''
@@ -81,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
           <button
             type="button"
             onClick={() => handleNav({ page: 'submit' })}
-            className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-md hover:opacity-90 transition-opacity whitespace-nowrap shrink-0 cursor-pointer"
+            className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-md hover:opacity-90 transition-opacity whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F3EC] dark:focus-visible:ring-offset-[#17201B]"
           >
             Submit a Hack
           </button>
@@ -91,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="md:hidden p-2 rounded-md text-[#17201B] dark:text-[#F5F3EC] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40"
+            className="md:hidden min-w-[44px] min-h-[44px] p-2 rounded-md text-[#17201B] dark:text-[#F5F3EC] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -100,8 +101,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#C9C5B8]/40 dark:border-[#294735]/60 bg-[#F5F3EC] dark:bg-[#17201B] px-6 py-4 space-y-3">
-          <div className="flex flex-col space-y-2">
+        <div className="md:hidden border-t border-[#C9C5B8]/40 dark:border-[#294735]/60 bg-[#F5F3EC] dark:bg-[#17201B] px-6 py-4">
+          <div className="flex flex-col">
             {navItems.map((item) => {
               const isActive = currentRoute.page === item.id;
               return (
@@ -109,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
                   key={item.id}
                   type="button"
                   onClick={() => handleNav(item.route)}
-                  className={`py-2.5 text-left text-sm font-medium border-b border-[#C9C5B8]/20 dark:border-[#294735]/30 flex items-center justify-between ${
+                  className={`min-h-[44px] py-2.5 text-left text-sm font-medium border-b border-[#C9C5B8]/25 dark:border-[#294735]/30 last:border-b-0 flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
                     isActive
                       ? 'text-[#294735] dark:text-[#D7E07A] font-semibold'
                       : 'text-[#17201B] dark:text-[#F5F3EC]'
@@ -124,18 +125,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
                 </button>
               );
             })}
-          </div>
-          <div className="pt-2 flex items-center justify-between">
-            <span className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
-              Appearance Mode
-            </span>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="px-3 py-1.5 text-xs font-medium rounded border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC]"
-            >
-              Switch to {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </button>
           </div>
         </div>
       )}

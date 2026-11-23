@@ -246,7 +246,7 @@ export function parsePasswordRecoveryUrl(locationLike: {
   hash: string;
 }): PendingPasswordRecovery | null {
   const pathname = (locationLike.pathname || '').replace(/\/+$/, '') || '/';
-  if (pathname !== '/admin') {
+  if (pathname !== '/admin' && pathname !== '/admin/login') {
     return null;
   }
 

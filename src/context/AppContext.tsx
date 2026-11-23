@@ -311,16 +311,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const adminFetchSeqRef = useRef(0);
   const lastServerTouchRef = useRef(0);
 
-  // Browser-local Theme state (Section 18)
+  // Browser-local Theme state (Unified Day/Night Theme — defaults to Night Mode)
   const [theme, setTheme] = useState<ThemeMode>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.THEME) as ThemeMode | null;
       if (saved === 'dark' || saved === 'light') return saved;
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        return 'light';
-      }
     } catch {
-      // default dark
+      // default dark (Night Mode)
     }
     return 'dark';
   });
@@ -458,7 +455,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return;
     }
     if (window.location.search || window.location.hash) {
-      window.history.replaceState({}, '', '/admin');
+      window.history.replaceState({}, '', '/admin/login');
     }
   }, [pendingPasswordRecovery]);
 
@@ -1542,7 +1539,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cancelPasswordRecovery = useCallback(() => {
     setPendingPasswordRecovery(null);
     if (typeof window !== 'undefined' && (window.location.search || window.location.hash)) {
-      window.history.replaceState({}, '', '/admin');
+      window.history.replaceState({}, '', '/admin/login');
     }
   }, []);
 

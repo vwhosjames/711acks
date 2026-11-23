@@ -1,5 +1,4 @@
-import React from 'react';
-import { Sun, Moon, Lock } from 'lucide-react';
+import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { PublicRoute } from './Navbar';
 
@@ -8,160 +7,163 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const { theme, toggleTheme, isLiveSupabase } = useApp();
+  const { isLiveSupabase } = useApp();
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      console.info(
+        '[711ACKS] Data Mode:',
+        isLiveSupabase ? 'Live Supabase PostgreSQL' : 'Local Preview Catalog'
+      );
+    }
+  }, [isLiveSupabase]);
 
   const go = (route: PublicRoute) => {
     onNavigate(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const linkClass =
+    'min-h-[44px] md:min-h-0 inline-flex items-center py-1 text-sm text-[#35443B] dark:text-[#C9C5B8] hover:text-[#294735] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-colors motion-reduce:transition-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm text-left';
+
+  const headingClass =
+    'text-[13px] font-medium text-[#294735] dark:text-[#E2DFD5]';
+
   return (
-    <footer className="bg-[#17201B] text-[#C9C5B8] border-t border-[#294735] mt-20">
-      <div className="max-w-7xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-[#294735]/70">
-          {/* Brand & Independent Disclaimer */}
-          <div className="md:col-span-6 space-y-4">
-            <div className="font-display text-2xl font-light tracking-[0.22em] uppercase text-[#F5F3EC]">
+    <footer className="bg-[#ECE9DF] dark:bg-[#17201B] text-[#2F3E35] dark:text-[#C9C5B8] mt-20 transition-colors motion-reduce:transition-none">
+      {/* 3px 7-Eleven-inspired orange, green, and red stripe accent */}
+      <div aria-hidden="true" className="h-[3px] w-full flex">
+        <span className="flex-1 bg-[#F58220]" />
+        <span className="flex-1 bg-[#008061]" />
+        <span className="flex-1 bg-[#EE2526]" />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12 md:py-14">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] gap-x-8 gap-y-10 pb-10 border-b border-[#C9C5B8]/70 dark:border-[#294735]/80">
+          {/* Brand Block */}
+          <div className="col-span-2 md:col-span-1 space-y-3.5">
+            <div className="font-display text-2xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC]">
               711ACKS
             </div>
-            <p className="text-sm text-[#C9C5B8] max-w-md leading-relaxed">
-              An independent, fan-made digital collection of creative drink combinations made exclusively from products available at 7-Eleven Philippines.
+            <p className="text-sm text-[#2F3E35] dark:text-[#C9C5B8] max-w-[36ch] leading-relaxed text-balance">
+              Fan-made drink hacks gamit ang products ng 7&#8209;Eleven Philippines.
             </p>
           </div>
 
-          {/* Public Navigation Links */}
-          <div className="md:col-span-3 space-y-3">
-            <h3 className="text-xs font-mono-tabular uppercase tracking-widest text-[#D7E07A]">
-              Explore Archive
-            </h3>
-            <ul className="space-y-2 text-sm">
+          {/* Browse Column */}
+          <nav aria-label="Browse drinks" className="col-span-1 space-y-2.5">
+            <h3 className={headingClass}>Browse</h3>
+            <ul className="space-y-0.5 md:space-y-1.5">
               <li>
                 <button
                   type="button"
-                  onClick={() => go({ page: 'explore' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  onClick={() => go({ page: 'explore', initialCategory: 'ALL' })}
+                  className={linkClass}
                 >
-                  All Drink Hacks
+                  All Hacks
                 </button>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => go({ page: 'explore', initialCategory: 'Coffee Mixes' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  onClick={() =>
+                    go({ page: 'explore', initialCategory: 'Coffee Mixes' })
+                  }
+                  className={linkClass}
                 >
-                  Coffee Mixes
+                  Coffee
                 </button>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => go({ page: 'explore', initialCategory: 'Chocolate-Based' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  onClick={() =>
+                    go({ page: 'explore', initialCategory: 'Chocolate-Based' })
+                  }
+                  className={linkClass}
                 >
-                  Chocolate-Based
+                  Chocolate
                 </button>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => go({ page: 'explore', initialCategory: 'Fruity & Soda' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  onClick={() =>
+                    go({ page: 'explore', initialCategory: 'Fruity & Soda' })
+                  }
+                  className={linkClass}
                 >
                   Fruity &amp; Soda
                 </button>
               </li>
             </ul>
-          </div>
+          </nav>
 
-          {/* Community & Appearance */}
-          <div className="md:col-span-3 space-y-3">
-            <h3 className="text-xs font-mono-tabular uppercase tracking-widest text-[#D7E07A]">
-              Community &amp; Info
-            </h3>
-            <ul className="space-y-2 text-sm">
+          {/* Community Column */}
+          <nav aria-label="Community" className="col-span-1 space-y-2.5">
+            <h3 className={headingClass}>Community</h3>
+            <ul className="space-y-0.5 md:space-y-1.5">
               <li>
                 <button
                   type="button"
                   onClick={() => go({ page: 'submit' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  className={linkClass}
                 >
-                  Submit a Drink Hack
+                  Submit a Hack
                 </button>
               </li>
               <li>
                 <button
                   type="button"
                   onClick={() => go({ page: 'favorites' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  className={linkClass}
                 >
-                  Saved Browser Favorites
+                  Favorites
                 </button>
               </li>
               <li>
                 <button
                   type="button"
                   onClick={() => go({ page: 'about' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  className={linkClass}
                 >
-                  About &amp; Disclaimer
+                  About
                 </button>
               </li>
               <li>
                 <button
                   type="button"
                   onClick={() => go({ page: 'contact' })}
-                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer"
+                  className={linkClass}
                 >
-                  Report a Price or Issue
+                  Report an issue
                 </button>
               </li>
             </ul>
-
-            <div className="pt-3">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                aria-label={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-                className="px-3.5 py-2 text-xs font-medium rounded border border-[#294735] bg-[#1E2B23] text-[#F5F3EC] hover:border-[#D7E07A] transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-3.5 h-3.5 text-[#D7E07A]" />
-                    <span>Light Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-3.5 h-3.5 text-[#D7E07A]" />
-                    <span>Dark Mode</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom Copyright & Quiet Owner Portal Entry */}
-        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#C9C5B8]/70">
-          <div className="flex flex-wrap items-center gap-2">
-            <span>© {new Date().getFullYear()} 711acks Portfolio Project</span>
+        {/* Bottom Row */}
+        <div className="pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-[#3A4A40] dark:text-[#C9C5B8]">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>© 2026 711ACKS</span>
             <span aria-hidden="true">·</span>
             <span>
-              Data Mode:{' '}
-              {isLiveSupabase
-                ? 'Live Supabase PostgreSQL'
-                : 'Verified Demo Catalog (Configure VITE_SUPABASE_URL for cloud persistence)'}
+              Built by{' '}
+              <a
+                href="https://github.com/vwhosjames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-h-[44px] md:min-h-0 inline-flex items-center font-medium text-[#294735] dark:text-[#E2DFD5] hover:text-[#17201B] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm"
+              >
+                James Narzoles
+              </a>
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={() => go({ page: 'admin' })}
-            className="text-xs text-[#C9C5B8]/60 hover:text-[#D7E07A] transition-colors flex items-center gap-1.5 cursor-pointer"
-          >
-            <Lock className="w-3 h-3" />
-            <span>Owner Console</span>
-          </button>
+          <p className="leading-relaxed text-[#3A4A40] dark:text-[#C9C5B8] md:text-right">
+            Not affiliated with or endorsed by 7&#8209;Eleven Philippines. Prices and availability may change.
+          </p>
         </div>
       </div>
     </footer>

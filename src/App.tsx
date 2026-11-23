@@ -16,28 +16,64 @@ import { SubmitHackPage } from './pages/SubmitHackPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { APPROVED_CATEGORIES } from './types/domain';
+import {
+  adminRouteToPath,
+  normalizePathname,
+  parseAdminPath,
+  resolveProtectedAdminRoute,
+} from './lib/adminRoutes';
 
 function parseLocationToRoute(): PublicRoute {
-  const path = window.location.pathname;
+  const path = normalizePathname(window.location.pathname);
+
+  const adminRoute = parseAdminPath(path);
+  if (adminRoute) {
+    return adminRoute;
+  }
+
   if (path.startsWith('/drinks/')) {
     const slug = decodeURIComponent(path.replace('/drinks/', '').replace(/\/$/, ''));
     if (slug) return { page: 'drink-detail', slug };
   }
-  if (path === '/explore') return { page: 'explore' };
+  if (path === '/explore') {
+    const params = new URLSearchParams(window.location.search);
+    const categoryParam = params.get('category') || undefined;
+    const searchParam = params.get('q') || undefined;
+    return {
+      page: 'explore',
+      initialCategory:
+        categoryParam && (APPROVED_CATEGORIES as string[]).includes(categoryParam)
+          ? categoryParam
+          : 'ALL',
+      initialSearch: searchParam,
+    };
+  }
   if (path === '/submit') return { page: 'submit' };
   if (path === '/favorites') return { page: 'favorites' };
   if (path === '/about') return { page: 'about' };
   if (path === '/contact') return { page: 'contact' };
-  if (path === '/admin') return { page: 'admin' };
   return { page: 'home' };
 }
 
-function routeToPath(route: PublicRoute): string {
+function routeToUrl(route: PublicRoute): string {
   switch (route.page) {
     case 'home':
       return '/';
-    case 'explore':
-      return '/explore';
+    case 'explore': {
+      const params = new URLSearchParams();
+      if (
+        route.initialCategory &&
+        (APPROVED_CATEGORIES as string[]).includes(route.initialCategory)
+      ) {
+        params.set('category', route.initialCategory);
+      }
+      if (route.initialSearch && route.initialSearch.trim()) {
+        params.set('q', route.initialSearch.trim());
+      }
+      const query = params.toString();
+      return query ? `/explore?${query}` : '/explore';
+    }
     case 'submit':
       return '/submit';
     case 'favorites':
@@ -49,21 +85,27 @@ function routeToPath(route: PublicRoute): string {
     case 'drink-detail':
       return `/drinks/${encodeURIComponent(route.slug)}`;
     case 'admin':
-      return '/admin';
+      return adminRouteToPath(route);
   }
 }
 
 const AppRouter: React.FC = () => {
-  const { websiteSettings } = useApp();
+  const { websiteSettings, adminSession } = useApp();
   const [route, setRoute] = useState<PublicRoute>(() => parseLocationToRoute());
 
   const handleNavigate = useCallback((nextRoute: PublicRoute) => {
-    setRoute(nextRoute);
-    const nextPath = routeToPath(nextRoute);
-    if (window.location.pathname !== nextPath) {
-      window.history.pushState({}, '', nextPath);
+    const resolvedRoute: PublicRoute =
+      nextRoute.page === 'admin'
+        ? resolveProtectedAdminRoute(nextRoute, Boolean(adminSession)).effectiveRoute
+        : nextRoute;
+
+    setRoute(resolvedRoute);
+    const nextUrl = routeToUrl(resolvedRoute);
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (currentUrl !== nextUrl) {
+      window.history.pushState({}, '', nextUrl);
     }
-  }, []);
+  }, [adminSession]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -73,9 +115,36 @@ const AppRouter: React.FC = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  // Admin route has its own separate protected layout (Section 5 & Section 14)
+  // Enforce protected /admin/* routing: redirect unauthenticated users to /admin/login
+  // and authenticated admins visiting /admin or /admin/login to /admin/dashboard.
+  useEffect(() => {
+    if (route.page !== 'admin') return;
+    const { effectiveRoute, redirectPath } = resolveProtectedAdminRoute(
+      route,
+      Boolean(adminSession),
+      window.location.pathname
+    );
+    if (effectiveRoute.adminView !== route.adminView) {
+      setRoute(effectiveRoute);
+    }
+    if (redirectPath && window.location.pathname !== redirectPath) {
+      window.history.replaceState({}, '', redirectPath);
+    }
+  }, [adminSession, route]);
+
+  // Dedicated protected Admin layout (no public navbar or public footer)
   if (route.page === 'admin') {
-    return <AdminDashboardPage onNavigate={handleNavigate} />;
+    const { effectiveRoute } = resolveProtectedAdminRoute(
+      route,
+      Boolean(adminSession),
+      window.location.pathname
+    );
+    return (
+      <AdminDashboardPage
+        activeView={effectiveRoute.adminView}
+        onNavigate={handleNavigate}
+      />
+    );
   }
 
   // Maintenance Mode Gate (Section 19): blocks public routes while allowing Admin access

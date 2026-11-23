@@ -101,15 +101,23 @@ test('HeroFlashlight keeps single reusable spotlight layer, aligned image classe
     heroSource.match(/absolute inset-0 w-full h-full object-cover object-center/g) ?? [];
   assert.equal(alignedImgMatches.length, 4, 'All background and reveal scene layers must share identical sizing and alignment');
 
-  // Approved copy and layout preserved
+  // Approved copy and layout preserved (supports non-breaking hyphen in 7-Eleven)
   assert.ok(heroSource.includes('WELCOME TO 711ACKS'));
   assert.ok(heroSource.includes('HACK YOUR SIP.'));
   assert.ok(
     heroSource.includes(
       'Discover creative drink combinations made with your favorite 7-Eleven Philippines products.'
-    )
+    ) ||
+      heroSource.includes(
+        'Discover creative drink combinations made with your favorite 7&#8209;Eleven Philippines products.'
+      )
   );
   assert.ok(heroSource.includes('Explore Drink Hacks'));
   assert.ok(heroSource.includes('Create Your Own Hack'));
   assert.ok(heroSource.includes('min-h-[580px] lg:min-h-[680px]'));
+
+  // Unified global Day/Night theme toggle connected via useApp()
+  assert.ok(heroSource.includes("theme === 'dark' ? 'night' : 'day'"));
+  assert.ok(heroSource.includes('toggleTheme()'));
 });
+
