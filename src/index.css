@@ -12,24 +12,77 @@
     --font-display: 'Outfit', sans-serif;
     --font-sans: 'Plus Jakarta Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+
+    /* Core Motion Curves (ease-out for enter/exit, ease-in-out for morph/move, never ease-in) */
+    --ease-out: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+
+    /* Subtle translucent hairline borders & layered ambient shadows */
+    --border-hairline: rgba(23, 32, 27, 0.11);
+    --border-hairline-hover: rgba(41, 71, 53, 0.42);
+    --shadow-card:
+      0 1px 2px rgba(23, 32, 27, 0.04),
+      0 6px 18px -8px rgba(23, 32, 27, 0.08);
+    --shadow-card-hover:
+      0 2px 4px rgba(23, 32, 27, 0.06),
+      0 14px 30px -12px rgba(23, 32, 27, 0.14);
+  }
+
+  .dark {
+    --border-hairline: rgba(215, 224, 122, 0.13);
+    --border-hairline-hover: rgba(215, 224, 122, 0.42);
+    --shadow-card:
+      0 1px 2px rgba(0, 0, 0, 0.22),
+      0 8px 24px -12px rgba(0, 0, 0, 0.42);
+    --shadow-card-hover:
+      0 4px 10px rgba(0, 0, 0, 0.28),
+      0 18px 36px -14px rgba(0, 0, 0, 0.58);
   }
 
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent iOS Safari auto-zoom on touch form fields */
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea {
+      font-size: max(16px, 1rem);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+
+    .pressable:active {
+      transform: none !important;
+    }
+
+    .surface-card-interactive:hover {
+      transform: none !important;
     }
   }
 }
@@ -45,4 +98,132 @@
 .font-mono-tabular {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums-strict {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tightened display heading tracking (-0.02em) */
+.heading-tight {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Tactile press feedback (GPU transform only, fast ease-out) */
+.pressable {
+  transition-property: transform, opacity, background-color, border-color, color;
+  transition-duration: 160ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.pressable:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Invisible 44x44px minimum touch hit target for compact buttons */
+.hit-target-44 {
+  position: relative;
+}
+
+.hit-target-44::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* Layered translucent surface card (no harsh solid borders) */
+.surface-card {
+  border: 1px solid var(--border-hairline);
+  box-shadow: var(--shadow-card);
+}
+
+.surface-card-interactive {
+  border: 1px solid var(--border-hairline);
+  box-shadow: var(--shadow-card);
+  transition-property: transform, border-color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.surface-card-interactive:active {
+  transform: scale(0.985);
+}
+
+/* Fine-pointer-only hovers to prevent sticky touch hover states */
+@media (hover: hover) and (pointer: fine) {
+  .surface-card-interactive:hover {
+    transform: translate3d(0, -2px, 0);
+    border-color: var(--border-hairline-hover);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .hover-zoom-img {
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .group:hover .hover-zoom-img {
+    transform: scale(1.04);
+  }
+
+  .hover-surface-tint:hover {
+    background-color: rgba(41, 71, 53, 0.1);
+  }
+
+  .dark .hover-surface-tint:hover {
+    background-color: rgba(215, 224, 122, 0.1);
+  }
+
+  .hover-border-accent:hover {
+    border-color: var(--border-hairline-hover);
+  }
+}
+
+/* Multi-stop eased gradients (eliminates 2-stop banding and hard edges) */
+.hero-scrim-bottom {
+  background: linear-gradient(
+    to top,
+    rgba(23, 32, 27, 0.96) 0%,
+    rgba(23, 32, 27, 0.78) 18%,
+    rgba(23, 32, 27, 0.48) 38%,
+    rgba(23, 32, 27, 0.2) 60%,
+    rgba(23, 32, 27, 0.05) 80%,
+    rgba(23, 32, 27, 0) 100%
+  );
+}
+
+.hero-scrim-left {
+  background: linear-gradient(
+    to right,
+    rgba(23, 32, 27, 0.74) 0%,
+    rgba(23, 32, 27, 0.48) 24%,
+    rgba(23, 32, 27, 0.22) 50%,
+    rgba(23, 32, 27, 0.06) 76%,
+    rgba(23, 32, 27, 0) 100%
+  );
+}
+
+.card-scrim-bottom {
+  background: linear-gradient(
+    to top,
+    rgba(23, 32, 27, 0.62) 0%,
+    rgba(23, 32, 27, 0.34) 28%,
+    rgba(23, 32, 27, 0.12) 56%,
+    rgba(23, 32, 27, 0) 100%
+  );
+}
+
+/* Mobile safe-area padding helpers */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }

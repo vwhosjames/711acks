@@ -22,8 +22,8 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({
   const { websiteSettings } = useApp();
 
   return (
-    <div className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col justify-between p-6 transition-colors">
-      <div className="max-w-7xl mx-auto w-full py-4 flex flex-wrap items-center justify-between gap-2 border-b border-[#C9C5B8]/60 dark:border-[#294735]">
+    <div className="min-h-dvh safe-top safe-bottom bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col justify-between p-6 transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
+      <div className="max-w-7xl mx-auto w-full py-4 flex flex-wrap items-center justify-between gap-2 border-b border-[#17201B]/12 dark:border-[#D7E07A]/14">
         <span className="font-display text-xl font-light tracking-[0.22em] uppercase">
           711ACKS
         </span>
@@ -37,10 +37,10 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({
         <p className="font-mono-tabular text-xs uppercase tracking-[0.26em] text-[#294735] dark:text-[#D7E07A]">
           TEMPORARY ARCHIVE PAUSE
         </p>
-        <h1 className="font-display text-3xl sm:text-5xl font-light uppercase tracking-[0.12em]">
+        <h1 className="font-display text-3xl sm:text-5xl font-light uppercase heading-tight">
           {websiteSettings.maintenanceTitle}
         </h1>
-        <p className="text-sm sm:text-base text-[#17201B]/80 dark:text-[#C9C5B8] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#17201B]/80 dark:text-[#C9C5B8] leading-relaxed max-w-[65ch] mx-auto">
           {websiteSettings.maintenanceMessage}
         </p>
         <div className="pt-4 text-xs text-[#17201B]/70 dark:text-[#C9C5B8]/70">
@@ -48,14 +48,14 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto w-full py-4 border-t border-[#C9C5B8]/60 dark:border-[#294735] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#17201B]/75 dark:text-[#C9C5B8]/80">
+      <div className="max-w-7xl mx-auto w-full py-4 border-t border-[#17201B]/12 dark:border-[#D7E07A]/14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#17201B]/75 dark:text-[#C9C5B8]/80">
         <span>Independent Fan-Made 7&#8209;Eleven Philippines Drink Archive</span>
         <button
           type="button"
           onClick={() => onNavigate({ page: 'admin', adminView: 'login' })}
-          className="min-h-[44px] sm:min-h-0 text-xs text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
+          className="pressable min-h-[44px] sm:min-h-0 text-xs text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
         >
-          <Lock className="w-3.5 h-3.5" />
+          <Lock className="w-3.5 h-3.5 shrink-0" />
           <span>Administrator Console Access</span>
         </button>
       </div>

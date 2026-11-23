@@ -39,6 +39,7 @@ import { validateAndOptimizeImageFile } from '../lib/supabaseClient';
 import { isRelativeStoragePath } from '../lib/supabaseStorage';
 import { PublicRoute } from '../components/Navbar';
 import { AdminModule, AdminView } from '../lib/adminRoutes';
+import { formatSmartTimestamp } from '../utils/formatters';
 
 interface AdminDashboardPageProps {
   activeView: AdminView;
@@ -555,15 +556,15 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   // ============================================================================
   if (!adminSession) {
     return (
-      <div className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] py-12 sm:py-16 px-6 flex flex-col justify-center transition-colors">
+      <div className="min-h-dvh safe-top safe-bottom bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] py-12 sm:py-16 px-6 flex flex-col justify-center transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
         <div className="max-w-md mx-auto w-full space-y-8">
           <div className="flex items-center justify-between gap-4">
             <button
               type="button"
               onClick={() => onNavigate({ page: 'home' })}
-              className="min-h-[44px] sm:min-h-0 text-xs font-semibold uppercase tracking-wider text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
+              className="pressable min-h-[44px] sm:min-h-0 text-xs font-semibold uppercase tracking-wider text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 shrink-0" />
               <span>Return to Public Site</span>
             </button>
             <span className="font-mono-tabular text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
@@ -571,16 +572,16 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             </span>
           </div>
 
-          <div className="p-6 sm:p-8 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/80 dark:border-[#294735] rounded-md space-y-6 shadow-sm">
+          <div className="p-6 sm:p-8 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl space-y-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-xs font-mono-tabular uppercase tracking-widest text-[#294735] dark:text-[#D7E07A]">
-                <Lock className="w-4 h-4" />
+                <Lock className="w-4 h-4 shrink-0" />
                 <span>OWNER AUTHENTICATION + 2FA OTP</span>
               </div>
-              <h1 className="font-display text-2xl font-light uppercase tracking-wider">
+              <h1 className="font-display text-2xl font-light uppercase heading-tight">
                 711acks Admin Console
               </h1>
-              <p className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed">
+              <p className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed max-w-[65ch]">
                 Protected by two-step authentication. An unrestricted session is never released until both password verification and the 6-digit one-time challenge succeed.
               </p>
             </div>
@@ -655,7 +656,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     value={recoveryNewPassword}
                     onChange={(e) => setRecoveryNewPassword(e.target.value)}
                     placeholder="Min 12 chars, upper/lower/number/symbol"
-                    className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
+                    className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                   />
                 </div>
 
@@ -676,7 +677,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     value={recoveryConfirmPassword}
                     onChange={(e) => setRecoveryConfirmPassword(e.target.value)}
                     placeholder="Re-enter new owner password"
-                    className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
+                    className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                   />
                 </div>
 
@@ -720,7 +721,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       disabled={isAuthSubmitting}
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
+                      className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-3">
@@ -735,7 +736,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     <button
                       type="submit"
                       disabled={isAuthSubmitting}
-                      className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded cursor-pointer disabled:opacity-60"
+                      className="pressable min-h-[44px] px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-lg cursor-pointer disabled:opacity-60"
                     >
                       {isAuthSubmitting ? 'Sending...' : 'Send Recovery Email'}
                     </button>
@@ -759,7 +760,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       placeholder="owner@yourdomain.com"
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
+                      className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
 
@@ -779,7 +780,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Enter owner password"
-                      className="w-full px-3.5 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8] dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
+                      className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] disabled:opacity-60"
                     />
                   </div>
 
@@ -811,7 +812,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   <button
                     type="submit"
                     disabled={isAuthSubmitting}
-                    className="w-full py-3 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded hover:opacity-90 transition-opacity cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="pressable w-full min-h-[44px] py-3 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-lg hover:opacity-90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isAuthSubmitting
                       ? 'Verifying Credentials & Sending Code...'
@@ -968,10 +969,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   return (
     <div
       onClick={touchAdminActivity}
-      className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col transition-colors"
+      className="min-h-dvh safe-bottom bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] flex flex-col transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]"
     >
       {/* Dedicated Protected Admin Top Bar (No Public Navbar / No Duplicate Theme Toggle) */}
-      <header className="sticky top-0 z-30 bg-[#ECE9DF] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] border-b border-[#C9C5B8] dark:border-[#294735] px-4 sm:px-6 py-3.5 transition-colors">
+      <header className="sticky top-0 z-30 safe-top bg-[#ECE9DF]/95 dark:bg-[#17201B]/95 backdrop-blur-md text-[#17201B] dark:text-[#F5F3EC] border-b border-[#17201B]/12 dark:border-[#D7E07A]/14 px-4 sm:px-6 py-3.5 transition-[background-color,border-color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -979,7 +980,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               aria-label={mobileSidebarOpen ? 'Close admin navigation' : 'Open admin navigation'}
               aria-expanded={mobileSidebarOpen}
               onClick={() => setMobileSidebarOpen((prev) => !prev)}
-              className="lg:hidden min-w-[44px] min-h-[44px] p-2 rounded border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC] hover:border-[#294735] dark:hover:border-[#D7E07A] inline-flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+              className="pressable lg:hidden min-w-[44px] min-h-[44px] p-2 rounded-lg border border-[#17201B]/16 dark:border-[#D7E07A]/18 text-[#17201B] dark:text-[#F5F3EC] hover-border-accent inline-flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
             >
               {mobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -987,7 +988,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             <button
               type="button"
               onClick={() => navigateAdminModule('overview')}
-              className="font-display text-lg font-light tracking-[0.22em] uppercase text-[#294735] dark:text-[#D7E07A] whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
+              className="pressable font-display text-lg font-light tracking-[0.22em] uppercase text-[#294735] dark:text-[#D7E07A] whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
             >
               711ACKS ADMIN
             </button>
@@ -1000,13 +1001,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
             {/* 30-Minute Inactivity Countdown */}
             <div
-              className={`px-3 py-1.5 rounded border font-mono-tabular flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg border font-mono-tabular flex items-center gap-1.5 ${
                 remainingSeconds < 180
                   ? 'border-amber-600 dark:border-amber-500 text-amber-900 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/40'
-                  : 'border-[#C9C5B8] dark:border-[#294735] text-[#17201B]/80 dark:text-[#C9C5B8] bg-[#FFFFFF]/70 dark:bg-[#1E2B23]'
+                  : 'border-[#17201B]/14 dark:border-[#D7E07A]/16 text-[#17201B]/80 dark:text-[#C9C5B8] bg-[#FFFFFF]/70 dark:bg-[#1E2B23]'
               }`}
             >
-              <Clock className="w-3.5 h-3.5 text-[#294735] dark:text-[#D7E07A]" />
+              <Clock className="w-3.5 h-3.5 text-[#294735] dark:text-[#D7E07A] shrink-0" />
               <span>
                 Session Timer: {Math.floor(remainingSeconds / 60)}:
                 {(remainingSeconds % 60).toString().padStart(2, '0')}
@@ -1016,7 +1017,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             <button
               type="button"
               onClick={() => onNavigate({ page: 'home' })}
-              className="min-h-[44px] sm:min-h-0 px-3 py-1.5 rounded border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC] hover:border-[#294735] dark:hover:border-[#D7E07A] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+              className="pressable min-h-[44px] sm:min-h-[36px] px-3 py-1.5 rounded-lg border border-[#17201B]/16 dark:border-[#D7E07A]/18 text-[#17201B] dark:text-[#F5F3EC] hover-border-accent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
             >
               Public Site
             </button>
@@ -1024,9 +1025,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             <button
               type="button"
               onClick={() => logoutAdmin('Administrator signed out.')}
-              className="min-h-[44px] sm:min-h-0 px-3 py-1.5 rounded bg-red-700 dark:bg-red-900/70 text-white dark:text-red-100 border border-red-800 dark:border-red-700/60 hover:bg-red-800 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+              className="pressable min-h-[44px] sm:min-h-[36px] px-3 py-1.5 rounded-lg bg-red-700 dark:bg-red-900/70 text-white dark:text-red-100 border border-red-800 dark:border-red-700/60 hover:bg-red-800 flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="w-3.5 h-3.5 shrink-0" />
               <span>Sign Out</span>
             </button>
           </div>
@@ -1036,7 +1037,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         {mobileSidebarOpen && (
           <nav
             aria-label="Admin Mobile Navigation"
-            className="lg:hidden mt-3 pt-3 border-t border-[#C9C5B8]/80 dark:border-[#294735] grid grid-cols-1 sm:grid-cols-2 gap-1.5"
+            className="lg:hidden origin-top mt-3 pt-3 border-t border-[#17201B]/12 dark:border-[#D7E07A]/14 grid grid-cols-1 sm:grid-cols-2 gap-1.5"
           >
             {navModules.map((mod) => {
               const active = activeModule === mod.id;
@@ -1046,10 +1047,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   type="button"
                   aria-current={active ? 'page' : undefined}
                   onClick={() => navigateAdminModule(mod.id)}
-                  className={`min-h-[44px] w-full px-3 py-2 rounded text-left text-xs font-medium flex items-center justify-between transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] ${
+                  className={`pressable min-h-[44px] w-full px-3 py-2 rounded-lg text-left text-xs font-medium flex items-center justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] ${
                     active
                       ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold'
-                      : 'text-[#17201B] dark:text-[#F5F3EC] bg-[#FFFFFF]/60 dark:bg-[#1E2B23] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40'
+                      : 'text-[#17201B] dark:text-[#F5F3EC] bg-[#FFFFFF]/60 dark:bg-[#1E2B23] hover-surface-tint'
                   }`}
                 >
                   <span className="truncate">{mod.label}</span>
@@ -1070,7 +1071,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
         {/* Desktop Admin Sidebar Navigation */}
         <aside
           aria-label="Admin Sidebar Navigation"
-          className="hidden lg:block lg:col-span-3 sticky top-24 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/70 dark:border-[#294735] rounded-md p-3 space-y-1"
+          className="hidden lg:block lg:col-span-3 sticky top-24 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl p-3 space-y-1"
         >
           {navModules.map((mod) => {
             const active = activeModule === mod.id;
@@ -2108,7 +2109,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         </div>
                         <div className="text-[#17201B]/60 dark:text-[#C9C5B8]">
                           Last updated:{' '}
-                          {new Date(prod.lastUpdatedAt).toLocaleDateString()}
+                          {formatSmartTimestamp(prod.lastUpdatedAt)}
                         </div>
                       </div>
                     </div>
@@ -2177,7 +2178,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       </span>
                       <span className="font-mono-tabular">
                         Status: <strong>{rep.status}</strong> ·{' '}
-                        {new Date(rep.createdAt).toLocaleDateString()}
+                        {formatSmartTimestamp(rep.createdAt)}
                       </span>
                     </div>
                     <p className="text-sm text-[#17201B] dark:text-[#F5F3EC]">
@@ -2307,7 +2308,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         <span>Changed: {rev.changedFields.join(', ')}</span>
                       </div>
                       <span className="font-mono-tabular text-[#17201B]/65 dark:text-[#C9C5B8]">
-                        {new Date(rev.createdAt).toLocaleString()}
+                        {formatSmartTimestamp(rev.createdAt)}
                       </span>
                     </div>
                     <p className="text-[#17201B]/80 dark:text-[#C9C5B8]">

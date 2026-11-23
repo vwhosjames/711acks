@@ -3,6 +3,7 @@ import { AlertTriangle, RefreshCw, RotateCcw, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { APPROVED_CATEGORIES, DrinkCategory, SortOption } from '../types/domain';
 import { filterAndSortRecipes } from '../utils/drinkLogic';
+import { formatPluralCount } from '../utils/formatters';
 import { DrinkCard } from '../components/DrinkCard';
 import { PublicRoute } from '../components/Navbar';
 
@@ -54,24 +55,24 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] py-12 px-6">
+    <div className="min-h-dvh bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] py-12 px-6">
       <div className="max-w-7xl mx-auto space-y-10">
         {/* Header */}
-        <div className="space-y-3 border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-8">
+        <div className="space-y-3 border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-8">
           <p className="font-mono-tabular text-xs uppercase tracking-[0.24em] text-[#294735] dark:text-[#D7E07A]">
-            7-ELEVEN PHILIPPINES DRINK DIRECTORY
+            7&#8209;ELEVEN PHILIPPINES DRINK DIRECTORY
           </p>
-          <h1 className="font-display text-3xl sm:text-5xl font-light uppercase tracking-[0.12em]">
+          <h1 className="font-display text-3xl sm:text-5xl font-light uppercase heading-tight">
             Explore Drink Hacks
           </h1>
-          <p className="text-sm sm:text-base text-[#17201B]/75 dark:text-[#C9C5B8] max-w-2xl">
-            Search by drink name or specific 7-Eleven ingredient (such as Kopiko Lucky Day, Chuckie, Yakult, or Mogu Mogu) and compare full single-trip purchase costs.
+          <p className="text-sm sm:text-base text-[#17201B]/75 dark:text-[#C9C5B8] max-w-[65ch] leading-relaxed">
+            Search by drink name or specific 7&#8209;Eleven ingredient (such as Kopiko Lucky Day, Chuckie, Yakult, or Mogu Mogu) and compare full single-trip purchase costs.
           </p>
         </div>
 
-        {/* Search, Approved 3 Categories, and Sort Bar */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#FFFFFF] dark:bg-[#1E2B23] p-4 rounded-md border border-[#C9C5B8]/60 dark:border-[#294735]">
-          {/* Search Input */}
+        {/* Search, Approved 3 Categories, and Sort Bar (concentric radii: rounded-xl outer -> rounded-lg inner) */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card p-3.5 sm:p-4 rounded-xl">
+          {/* Search Input (>= 16px on mobile to prevent iOS auto-zoom) */}
           <div className="relative flex-1 min-w-[240px]">
             <label htmlFor="explore-search-input" className="sr-only">
               Search by drink name or ingredient
@@ -83,7 +84,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search drink name or 7-Eleven product (e.g. Chuckie, Lychee)..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8]/60 dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] placeholder:text-[#17201B]/45 dark:placeholder:text-[#C9C5B8]/60 focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A]"
+              className="w-full min-h-[44px] pl-10 pr-4 py-2 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/14 dark:border-[#D7E07A]/16 rounded-lg text-[#17201B] dark:text-[#F5F3EC] placeholder:text-[#17201B]/45 dark:placeholder:text-[#C9C5B8]/60 focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A] transition-[border-color] duration-150"
             />
           </div>
 
@@ -91,14 +92,14 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
           <div
             role="group"
             aria-label="Filter by Primary Drink Category"
-            className="flex flex-wrap items-center gap-1.5 bg-[#F5F3EC] dark:bg-[#17201B] p-1 rounded border border-[#C9C5B8]/40 dark:border-[#294735]"
+            className="flex flex-wrap items-center gap-1 bg-[#F5F3EC] dark:bg-[#17201B] p-1 rounded-lg border border-[#17201B]/12 dark:border-[#D7E07A]/14"
           >
             <button
               type="button"
               onClick={() => setSelectedCategory('ALL')}
-              className={`px-3.5 py-1.5 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`pressable min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedCategory === 'ALL'
-                  ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold'
+                  ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold shadow-xs'
                   : 'text-[#17201B]/75 dark:text-[#C9C5B8] hover:text-[#17201B] dark:hover:text-[#FFFFFF]'
               }`}
             >
@@ -109,9 +110,9 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                className={`pressable min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold'
+                    ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold shadow-xs'
                     : 'text-[#17201B]/75 dark:text-[#C9C5B8] hover:text-[#17201B] dark:hover:text-[#FFFFFF]'
                 }`}
               >
@@ -120,7 +121,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             ))}
           </div>
 
-          {/* Sorting Selector */}
+          {/* Sorting Selector (>= 16px on mobile to prevent iOS auto-zoom) */}
           <div className="flex items-center gap-2 shrink-0">
             <label
               htmlFor="explore-sort-select"
@@ -132,7 +133,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
               id="explore-sort-select"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="px-3 py-2 text-xs font-medium bg-[#F5F3EC] dark:bg-[#17201B] border border-[#C9C5B8]/60 dark:border-[#294735] rounded text-[#17201B] dark:text-[#F5F3EC] focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A]"
+              className="min-h-[44px] sm:min-h-[40px] px-3 py-2 text-base sm:text-xs font-medium bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/14 dark:border-[#D7E07A]/16 rounded-lg text-[#17201B] dark:text-[#F5F3EC] focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A] transition-[border-color] duration-150"
             >
               <option value="newest">Newest</option>
               <option value="popular">Most Popular</option>
@@ -144,18 +145,17 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
         {/* Results Count Summary */}
         <div className="flex items-center justify-between text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
-          <span>
-            Showing <strong className="font-mono-tabular">{filteredRecipes.length}</strong> published drink hack
-            {filteredRecipes.length === 1 ? '' : 's'}
+          <span className="tabular-nums-strict">
+            Showing <strong className="font-mono-tabular">{formatPluralCount(filteredRecipes.length, 'published drink hack')}</strong>
             {selectedCategory !== 'ALL' ? ` in ${selectedCategory}` : ''}
           </span>
           {(searchQuery.trim() !== '' || selectedCategory !== 'ALL' || sortBy !== 'newest') && (
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-xs font-medium text-[#294735] dark:text-[#D7E07A] hover:underline flex items-center gap-1 cursor-pointer"
+              className="pressable min-h-[44px] sm:min-h-0 text-xs font-medium text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1 cursor-pointer"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5 shrink-0" />
               <span>Reset Filters</span>
             </button>
           )}
@@ -164,7 +164,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         {dataError && (
           <div
             role="alert"
-            className="p-4 bg-red-500/10 border border-red-500/40 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-red-700 dark:text-red-300"
+            className="p-4 bg-red-500/10 border border-red-500/35 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-red-700 dark:text-red-300"
           >
             <div className="flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -173,9 +173,9 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             <button
               type="button"
               onClick={() => void refreshPublicData()}
-              className="px-3 py-1.5 rounded border border-red-500/40 hover:bg-red-500/10 font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer shrink-0"
+              className="pressable min-h-[40px] px-3 py-1.5 rounded-lg border border-red-500/40 hover:bg-red-500/10 font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer shrink-0"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5 shrink-0" />
               <span>Retry</span>
             </button>
           </div>
@@ -185,10 +185,10 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         {isLoadingData && filteredRecipes.length === 0 && !dataError ? (
           <div
             role="status"
-            className="bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md p-12 text-center max-w-lg mx-auto space-y-2"
+            className="bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl p-12 text-center max-w-lg mx-auto space-y-2"
           >
             <p className="text-sm text-[#17201B]/75 dark:text-[#C9C5B8]">
-              Loading verified 7-Eleven drink combinations...
+              Loading verified 7&#8209;Eleven drink combinations...
             </p>
           </div>
         ) : filteredRecipes.length > 0 ? (
@@ -205,11 +205,11 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             ))}
           </div>
         ) : (
-          <div className="bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md p-12 text-center max-w-lg mx-auto space-y-4">
-            <h2 className="font-display text-xl font-light uppercase tracking-wider">
+          <div className="bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl p-12 text-center max-w-lg mx-auto space-y-4">
+            <h2 className="font-display text-xl font-light uppercase heading-tight">
               No Matching Drink Hacks Found
             </h2>
-            <p className="text-sm text-[#17201B]/75 dark:text-[#C9C5B8]">
+            <p className="text-sm text-[#17201B]/75 dark:text-[#C9C5B8] max-w-[48ch] mx-auto leading-relaxed">
               {searchQuery.trim()
                 ? `No published recipes matched "${searchQuery}". Try searching for another 7-Eleven product or clear your filters.`
                 : `No drinks are currently published in ${selectedCategory}.`}
@@ -218,14 +218,14 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded cursor-pointer"
+                className="pressable min-h-[44px] px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-lg cursor-pointer"
               >
                 Reset All Filters
               </button>
               <button
                 type="button"
                 onClick={() => onNavigate({ page: 'submit' })}
-                className="px-4 py-2 text-xs font-medium border border-[#C9C5B8] dark:border-[#294735] rounded cursor-pointer"
+                className="pressable min-h-[44px] px-4 py-2 text-xs font-medium border border-[#17201B]/18 dark:border-[#D7E07A]/20 rounded-lg cursor-pointer hover-border-accent"
               >
                 Submit This Drink Hack
               </button>

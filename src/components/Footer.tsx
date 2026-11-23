@@ -24,13 +24,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   const linkClass =
-    'min-h-[44px] md:min-h-0 inline-flex items-center py-1 text-sm text-[#35443B] dark:text-[#C9C5B8] hover:text-[#294735] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-colors motion-reduce:transition-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm text-left';
+    'min-h-[44px] md:min-h-0 inline-flex items-center py-1 text-sm text-[#35443B] dark:text-[#C9C5B8] hover:text-[#294735] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-[color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] motion-reduce:transition-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm text-left';
 
   const headingClass =
     'text-[13px] font-medium text-[#294735] dark:text-[#E2DFD5]';
 
   return (
-    <footer className="bg-[#ECE9DF] dark:bg-[#17201B] text-[#2F3E35] dark:text-[#C9C5B8] mt-20 transition-colors motion-reduce:transition-none">
+    <footer className="bg-[#ECE9DF] dark:bg-[#17201B] text-[#2F3E35] dark:text-[#C9C5B8] mt-20 safe-bottom transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] motion-reduce:transition-none">
       {/* 3px 7-Eleven-inspired orange, green, and red stripe accent */}
       <div aria-hidden="true" className="h-[3px] w-full flex">
         <span className="flex-1 bg-[#F58220]" />
@@ -39,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-12 md:py-14">
-        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] gap-x-8 gap-y-10 pb-10 border-b border-[#C9C5B8]/70 dark:border-[#294735]/80">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] gap-x-8 gap-y-10 pb-10 border-b border-[#17201B]/12 dark:border-[#D7E07A]/14">
           {/* Brand Block */}
           <div className="col-span-2 md:col-span-1 space-y-3.5">
             <div className="font-display text-2xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC]">
@@ -154,7 +154,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 href="https://github.com/vwhosjames"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="min-h-[44px] md:min-h-0 inline-flex items-center font-medium text-[#294735] dark:text-[#E2DFD5] hover:text-[#17201B] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm"
+                className="min-h-[44px] md:min-h-0 inline-flex items-center font-medium text-[#294735] dark:text-[#E2DFD5] hover:text-[#17201B] dark:hover:text-[#D7E07A] hover:underline underline-offset-4 transition-[color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ECE9DF] dark:focus-visible:ring-offset-[#17201B] rounded-sm"
               >
                 James Narzoles
               </a>

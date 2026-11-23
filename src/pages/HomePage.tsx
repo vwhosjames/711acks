@@ -5,6 +5,7 @@ import { HeroFlashlight } from '../components/HeroFlashlight';
 import { DrinkCard } from '../components/DrinkCard';
 import { PublicRoute } from '../components/Navbar';
 import { formatPhpCurrency } from '../utils/drinkLogic';
+import { formatPluralCount } from '../utils/formatters';
 
 interface HomePageProps {
   onNavigate: (route: PublicRoute) => void;
@@ -67,7 +68,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] transition-colors">
+    <div className="min-h-dvh bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
       {/* SECTION 0: Official Dual-Image Flashlight Hero */}
       <HeroFlashlight onNavigate={onNavigate} />
 
@@ -75,7 +76,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         {dataError && (
           <div
             role="alert"
-            className="p-4 bg-red-500/10 border border-red-500/40 rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-red-700 dark:text-red-300"
+            className="p-4 bg-red-500/10 border border-red-500/35 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-red-700 dark:text-red-300"
           >
             <div className="flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -84,9 +85,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <button
               type="button"
               onClick={() => void refreshPublicData()}
-              className="px-3 py-1.5 rounded border border-red-500/40 hover:bg-red-500/10 font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer shrink-0"
+              className="pressable min-h-[40px] px-3 py-1.5 rounded-lg border border-red-500/40 hover:bg-red-500/10 font-semibold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer shrink-0"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5 shrink-0" />
               <span>Retry</span>
             </button>
           </div>
@@ -95,22 +96,22 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         {isLoadingData && publishedRecipes.length === 0 && !dataError && (
           <div
             role="status"
-            className="p-6 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md text-center text-sm text-[#17201B]/75 dark:text-[#C9C5B8]"
+            className="p-6 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl text-center text-sm text-[#17201B]/75 dark:text-[#C9C5B8]"
           >
-            Loading verified 7-Eleven drink combinations...
+            Loading verified 7&#8209;Eleven drink combinations...
           </div>
         )}
 
         {/* SECTION 1: Trending Drink Hacks — 3-Column Editorial Showcase */}
         <section aria-labelledby="heading-trending" className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-4">
             <div>
               <p className="font-mono-tabular text-xs uppercase tracking-[0.2em] text-[#294735] dark:text-[#D7E07A]">
                 01. High Engagement
               </p>
               <h2
                 id="heading-trending"
-                className="font-display text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] mt-1"
+                className="font-display text-2xl sm:text-3xl font-light uppercase heading-tight mt-1"
               >
                 Trending Drink Hacks
               </h2>
@@ -118,10 +119,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <button
               type="button"
               onClick={() => onNavigate({ page: 'explore' })}
-              className="text-xs font-semibold uppercase tracking-wider text-[#294735] dark:text-[#D7E07A] hover:underline flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+              className="pressable min-h-[44px] sm:min-h-0 text-xs font-semibold uppercase tracking-wider text-[#294735] dark:text-[#D7E07A] hover:underline underline-offset-4 flex items-center gap-1.5 cursor-pointer self-start sm:self-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm"
             >
               <span>Browse Full Archive</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </button>
           </div>
 
@@ -139,19 +140,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
         {/* SECTION 2: Editor's Picks — Asymmetric Editorial Split Feature */}
         <section aria-labelledby="heading-editors-picks" className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-4">
             <div>
               <p className="font-mono-tabular text-xs uppercase tracking-[0.2em] text-[#294735] dark:text-[#D7E07A]">
                 02. Curated Selections
               </p>
               <h2
                 id="heading-editors-picks"
-                className="font-display text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] mt-1"
+                className="font-display text-2xl sm:text-3xl font-light uppercase heading-tight mt-1"
               >
                 Editor&apos;s Picks
               </h2>
             </div>
-            <p className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8] max-w-sm">
+            <p className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8] max-w-[46ch] leading-relaxed">
               Hand-tested combinations chosen by the 711acks curator for flavor balance and exact single-trip convenience.
             </p>
           </div>
@@ -169,34 +170,36 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     openDrink(editorsPicks[0].slug);
                   }
                 }}
-                className="lg:col-span-7 group bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md overflow-hidden flex flex-col justify-between cursor-pointer hover:border-[#294735] dark:hover:border-[#D7E07A]/60 transition-colors"
+                className="lg:col-span-7 group bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
               >
                 <div className="aspect-16/10 w-full bg-[#17201B] overflow-hidden relative">
                   <img
                     src={editorsPicks[0].photoUrl}
                     alt={editorsPicks[0].name}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-cover object-center hover-zoom-img"
                   />
                 </div>
                 <div className="p-6 space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-[#294735] dark:text-[#D7E07A]">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#294735] dark:text-[#D7E07A]">
                     <span>{editorsPicks[0].category}</span>
                     <span aria-hidden="true">·</span>
                     <span>Curator Selection</span>
                     <span aria-hidden="true">·</span>
-                    <span>{editorsPicks[0].ingredients.length} 7-Eleven items</span>
+                    <span className="tabular-nums-strict">
+                      {formatPluralCount(editorsPicks[0].ingredients.length, '7-Eleven item')}
+                    </span>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
-                    <h3 className="font-display text-2xl font-light uppercase tracking-wider text-[#17201B] dark:text-[#F5F3EC]">
+                    <h3 className="font-display text-2xl font-light uppercase heading-tight text-[#17201B] dark:text-[#F5F3EC]">
                       {editorsPicks[0].name}
                     </h3>
-                    <span className="font-mono-tabular text-lg font-semibold text-[#294735] dark:text-[#D7E07A]">
+                    <span className="font-mono-tabular text-lg font-semibold text-[#294735] dark:text-[#D7E07A] whitespace-nowrap shrink-0">
                       {formatPhpCurrency(editorsPicks[0].totalPurchaseCost)}
                     </span>
                   </div>
                   {editorsPicks[0].tasteNotes && (
-                    <p className="text-sm text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed">
+                    <p className="text-sm text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed max-w-[65ch]">
                       {editorsPicks[0].tasteNotes}
                     </p>
                   )}
@@ -217,17 +220,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                         openDrink(pick.slug);
                       }
                     }}
-                    className="flex-1 group bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md p-4 flex items-center gap-5 cursor-pointer hover:border-[#294735] dark:hover:border-[#D7E07A]/60 transition-colors"
+                    className="flex-1 group bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl p-4 flex items-center gap-5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
                   >
                     <img
                       src={pick.photoUrl}
                       alt={pick.name}
                       referrerPolicy="no-referrer"
-                      className="w-28 h-28 rounded object-cover shrink-0 bg-[#17201B]"
+                      className="w-28 h-28 rounded-lg object-cover shrink-0 bg-[#17201B]"
                     />
                     <div className="space-y-1.5 flex-1 min-w-0">
-                      <div className="text-xs text-[#294735] dark:text-[#D7E07A]">
-                        {pick.category} · {pick.ingredients.length} items
+                      <div className="text-xs text-[#294735] dark:text-[#D7E07A] tabular-nums-strict">
+                        {pick.category} · {formatPluralCount(pick.ingredients.length, 'item')}
                       </div>
                       <h3 className="text-base font-semibold text-[#17201B] dark:text-[#F5F3EC] truncate">
                         {pick.name}
@@ -248,66 +251,72 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
         {/* SECTION 3: Budget-Friendly Drinks — Tabular Cost Ledger Composition */}
         <section aria-labelledby="heading-budget" className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-4">
             <div>
               <p className="font-mono-tabular text-xs uppercase tracking-[0.2em] text-[#294735] dark:text-[#D7E07A]">
                 03. Verified Full-Unit Purchase Cost
               </p>
               <h2
                 id="heading-budget"
-                className="font-display text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] mt-1"
+                className="font-display text-2xl sm:text-3xl font-light uppercase heading-tight mt-1"
               >
                 Budget-Friendly Drinks
               </h2>
             </div>
-            <p className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8] max-w-md">
-              Ranked by lowest verified total checkout cost at 7-Eleven Philippines (charging full bottles/packs required at the counter).
+            <p className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8] max-w-[46ch] leading-relaxed">
+              Ranked by lowest verified total checkout cost at 7&#8209;Eleven Philippines (charging full bottles/packs required at the counter).
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {budgetFriendly.map((recipe, idx) => (
-              <div
-                key={recipe.id}
-                onClick={() => openDrink(recipe.slug)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openDrink(recipe.slug);
-                  }
-                }}
-                className="bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md p-5 flex flex-col justify-between gap-4 cursor-pointer hover:border-[#294735] dark:hover:border-[#D7E07A]/60 transition-colors"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-mono-tabular text-[#17201B]/60 dark:text-[#C9C5B8]">
-                    <span>0{idx + 1} · {recipe.category}</span>
-                    <span>{recipe.ingredients.length} units</span>
+            {budgetFriendly.map((recipe, idx) => {
+              const totalUnits = recipe.ingredients.reduce(
+                (sum, ing) => sum + Math.max(1, ing.unitsToPurchase),
+                0
+              );
+              return (
+                <div
+                  key={recipe.id}
+                  onClick={() => openDrink(recipe.slug)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openDrink(recipe.slug);
+                    }
+                  }}
+                  className="group bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl p-4 flex flex-col justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-xs font-mono-tabular text-[#17201B]/60 dark:text-[#C9C5B8]">
+                      <span>0{idx + 1} · {recipe.category}</span>
+                      <span>{formatPluralCount(totalUnits, 'unit')}</span>
+                    </div>
+                    <div className="aspect-4/3 w-full rounded-lg overflow-hidden bg-[#17201B]">
+                      <img
+                        src={recipe.photoUrl}
+                        alt={recipe.name}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover hover-zoom-img"
+                      />
+                    </div>
+                    <h3 className="text-base font-semibold text-[#17201B] dark:text-[#F5F3EC]">
+                      {recipe.name}
+                    </h3>
                   </div>
-                  <div className="aspect-4/3 w-full rounded overflow-hidden bg-[#17201B]">
-                    <img
-                      src={recipe.photoUrl}
-                      alt={recipe.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-base font-semibold text-[#17201B] dark:text-[#F5F3EC]">
-                    {recipe.name}
-                  </h3>
-                </div>
 
-                <div className="pt-3 border-t border-[#C9C5B8]/30 dark:border-[#294735] flex items-baseline justify-between">
-                  <span className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
-                    Full Checkout Total
-                  </span>
-                  <span className="font-mono-tabular text-base font-bold text-[#294735] dark:text-[#D7E07A]">
-                    {formatPhpCurrency(recipe.totalPurchaseCost)}
-                  </span>
+                  <div className="pt-3 border-t border-[#17201B]/10 dark:border-[#D7E07A]/12 flex items-baseline justify-between">
+                    <span className="text-xs text-[#17201B]/70 dark:text-[#C9C5B8]">
+                      Full Checkout Total
+                    </span>
+                    <span className="font-mono-tabular text-base font-bold text-[#294735] dark:text-[#D7E07A]">
+                      {formatPhpCurrency(recipe.totalPurchaseCost)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -318,13 +327,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             aria-labelledby="heading-community-favorites"
             className="lg:col-span-6 space-y-6"
           >
-            <div className="border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-4">
+            <div className="border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-4">
               <p className="font-mono-tabular text-xs uppercase tracking-[0.2em] text-[#294735] dark:text-[#D7E07A]">
                 04. Ranked By Anonymous Likes
               </p>
               <h2
                 id="heading-community-favorites"
-                className="font-display text-2xl font-light uppercase tracking-[0.1em] mt-1"
+                className="font-display text-2xl font-light uppercase heading-tight mt-1"
               >
                 Community Favorites
               </h2>
@@ -333,20 +342,20 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {likeError && (
               <div
                 role="alert"
-                className="p-3 bg-red-500/10 border border-red-500/40 rounded text-xs text-red-700 dark:text-red-300"
+                className="p-3 bg-red-500/10 border border-red-500/40 rounded-lg text-xs text-red-700 dark:text-red-300"
               >
                 {likeError}
               </div>
             )}
 
-            <div className="divide-y divide-[#C9C5B8]/40 dark:divide-[#294735] bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md">
+            <div className="divide-y divide-[#17201B]/10 dark:divide-[#D7E07A]/12 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl overflow-hidden">
               {communityFavorites.map((recipe, index) => {
                 const liked = hasLiked(recipe.id);
                 const likeBusy = isLikePending(recipe.id);
                 return (
                   <div
                     key={recipe.id}
-                    className="p-4 flex items-center justify-between gap-4 hover:bg-[#F5F3EC]/50 dark:hover:bg-[#294735]/20 transition-colors"
+                    className="p-4 flex items-center justify-between gap-4 hover-surface-tint transition-[background-color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)]"
                   >
                     <div
                       onClick={() => openDrink(recipe.slug)}
@@ -358,7 +367,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                           openDrink(recipe.slug);
                         }
                       }}
-                      className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer"
+                      className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-lg"
                     >
                       <span className="font-mono-tabular text-sm font-semibold text-[#294735] dark:text-[#D7E07A] w-6 shrink-0">
                         0{index + 1}
@@ -367,13 +376,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                         src={recipe.photoUrl}
                         alt={recipe.name}
                         referrerPolicy="no-referrer"
-                        className="w-14 h-14 rounded object-cover shrink-0 bg-[#17201B]"
+                        className="w-14 h-14 rounded-lg object-cover shrink-0 bg-[#17201B]"
                       />
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm font-semibold text-[#17201B] dark:text-[#F5F3EC] truncate">
                           {recipe.name}
                         </h3>
-                        <p className="text-xs text-[#17201B]/65 dark:text-[#C9C5B8]">
+                        <p className="text-xs text-[#17201B]/65 dark:text-[#C9C5B8] font-mono-tabular">
                           {recipe.category} · {formatPhpCurrency(recipe.totalPurchaseCost)}
                         </p>
                       </div>
@@ -383,17 +392,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                       type="button"
                       disabled={likeBusy}
                       onClick={() => void handleLeaderboardLike(recipe.id)}
-                      aria-label={`Like ${recipe.name}`}
-                      className={`px-3 py-1.5 rounded text-xs font-mono-tabular flex items-center gap-1.5 shrink-0 ${
+                      aria-label={`Like ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`}
+                      className={`hit-target-44 pressable px-3 py-1.5 rounded-lg text-xs font-mono-tabular flex items-center gap-1.5 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] ${
                         likeBusy ? 'opacity-60 cursor-wait' : 'cursor-pointer'
                       } ${
                         liked
                           ? 'bg-[#D7E07A] text-[#17201B] font-semibold'
-                          : 'border border-[#C9C5B8] dark:border-[#294735] text-[#17201B] dark:text-[#F5F3EC] hover:border-[#294735] dark:hover:border-[#D7E07A]'
+                          : 'border border-[#17201B]/18 dark:border-[#D7E07A]/20 text-[#17201B] dark:text-[#F5F3EC] hover-border-accent'
                       }`}
                     >
                       <Heart
-                        className={`w-3.5 h-3.5 ${
+                        className={`w-3.5 h-3.5 shrink-0 ${
                           liked ? 'fill-[#17201B] text-[#17201B]' : ''
                         }`}
                       />
@@ -407,13 +416,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
           {/* SECTION 5: Newest Creations (Recently Published) */}
           <section aria-labelledby="heading-newest" className="lg:col-span-6 space-y-6">
-            <div className="border-b border-[#C9C5B8]/50 dark:border-[#294735] pb-4">
+            <div className="border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 pb-4">
               <p className="font-mono-tabular text-xs uppercase tracking-[0.2em] text-[#294735] dark:text-[#D7E07A]">
                 05. Freshly Verified
               </p>
               <h2
                 id="heading-newest"
-                className="font-display text-2xl font-light uppercase tracking-[0.1em] mt-1"
+                className="font-display text-2xl font-light uppercase heading-tight mt-1"
               >
                 Newest Creations
               </h2>
@@ -432,14 +441,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                       openDrink(recipe.slug);
                     }
                   }}
-                  className="p-4 bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/60 dark:border-[#294735] rounded-md flex items-center justify-between gap-4 cursor-pointer hover:border-[#294735] dark:hover:border-[#D7E07A]/60 transition-colors"
+                  className="p-4 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl flex items-center justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <img
                       src={recipe.photoUrl}
                       alt={recipe.name}
                       referrerPolicy="no-referrer"
-                      className="w-16 h-16 rounded object-cover shrink-0 bg-[#17201B]"
+                      className="w-16 h-16 rounded-lg object-cover shrink-0 bg-[#17201B]"
                     />
                     <div className="space-y-1 min-w-0">
                       <div className="text-xs text-[#17201B]/65 dark:text-[#C9C5B8]">
@@ -454,8 +463,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     <div className="font-mono-tabular text-sm font-semibold text-[#294735] dark:text-[#D7E07A]">
                       {formatPhpCurrency(recipe.totalPurchaseCost)}
                     </div>
-                    <div className="text-xs text-[#17201B]/60 dark:text-[#C9C5B8]">
-                      {recipe.ingredients.length} items
+                    <div className="text-xs text-[#17201B]/60 dark:text-[#C9C5B8] tabular-nums-strict">
+                      {formatPluralCount(recipe.ingredients.length, 'item')}
                     </div>
                   </div>
                 </div>

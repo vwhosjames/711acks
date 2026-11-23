@@ -37,13 +37,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#F5F3EC]/95 dark:bg-[#17201B]/95 backdrop-blur-md border-b border-[#C9C5B8]/40 dark:border-[#294735]/60 transition-colors">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-8 px-6 py-4">
+    <header className="sticky top-0 z-40 w-full safe-top bg-[#F5F3EC]/92 dark:bg-[#17201B]/92 backdrop-blur-md border-b border-[#17201B]/10 dark:border-[#D7E07A]/12 transition-[background-color,border-color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-8 px-6 py-3.5">
         {/* Zone 1: Single text element wordmark */}
         <button
           type="button"
           onClick={() => handleNav({ page: 'home' })}
-          className="font-display text-xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC] whitespace-nowrap shrink-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer"
+          className="pressable font-display text-xl font-light tracking-[0.22em] uppercase text-[#17201B] dark:text-[#F5F3EC] whitespace-nowrap shrink-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer"
         >
           711ACKS
         </button>
@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
                 key={item.id}
                 type="button"
                 onClick={() => handleNav(item.route)}
-                className={`relative py-1 transition-colors whitespace-nowrap shrink-0 hover:text-[#17201B] dark:hover:text-[#FFFFFF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
+                className={`relative py-1 transition-[color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] whitespace-nowrap shrink-0 hover:text-[#17201B] dark:hover:text-[#FFFFFF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
                   isActive
                     ? 'text-[#17201B] dark:text-[#D7E07A] font-semibold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#294735] dark:after:bg-[#D7E07A]'
                     : ''
@@ -82,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
           <button
             type="button"
             onClick={() => handleNav({ page: 'submit' })}
-            className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-md hover:opacity-90 transition-opacity whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F3EC] dark:focus-visible:ring-offset-[#17201B]"
+            className="pressable min-h-[40px] px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] rounded-lg hover:opacity-90 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F3EC] dark:focus-visible:ring-offset-[#17201B]"
           >
             Submit a Hack
           </button>
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="md:hidden min-w-[44px] min-h-[44px] p-2 rounded-md text-[#17201B] dark:text-[#F5F3EC] hover:bg-[#294735]/10 dark:hover:bg-[#294735]/40 inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] cursor-pointer"
+            className="pressable md:hidden min-w-[44px] min-h-[44px] p-2 rounded-lg text-[#17201B] dark:text-[#F5F3EC] hover-surface-tint inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#C9C5B8]/40 dark:border-[#294735]/60 bg-[#F5F3EC] dark:bg-[#17201B] px-6 py-4">
+        <div className="md:hidden origin-top border-t border-[#17201B]/10 dark:border-[#D7E07A]/12 bg-[#F5F3EC] dark:bg-[#17201B] px-6 py-4">
           <div className="flex flex-col">
             {navItems.map((item) => {
               const isActive = currentRoute.page === item.id;
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate }) => {
                   key={item.id}
                   type="button"
                   onClick={() => handleNav(item.route)}
-                  className={`min-h-[44px] py-2.5 text-left text-sm font-medium border-b border-[#C9C5B8]/25 dark:border-[#294735]/30 last:border-b-0 flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
+                  className={`pressable min-h-[44px] py-2.5 text-left text-sm font-medium border-b border-[#17201B]/8 dark:border-[#D7E07A]/10 last:border-b-0 flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A] rounded-sm cursor-pointer ${
                     isActive
                       ? 'text-[#294735] dark:text-[#D7E07A] font-semibold'
                       : 'text-[#17201B] dark:text-[#F5F3EC]'

@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { DrinkRecipe } from '../types/domain';
 import { formatPhpCurrency } from '../utils/drinkLogic';
+import { formatPluralCount } from '../utils/formatters';
 import { useApp } from '../context/AppContext';
 
 interface DrinkCardProps {
@@ -49,7 +50,7 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
       aria-label={`View ${recipe.name} details, total purchase cost ${formatPhpCurrency(
         recipe.totalPurchaseCost
       )}`}
-      className="group relative flex flex-col bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#C9C5B8]/50 dark:border-[#294735] rounded-md overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:border-[#294735] dark:hover:border-[#D7E07A]/60 cursor-pointer text-left focus-visible:outline-2 focus-visible:outline-[#D7E07A]"
+      className="group relative flex flex-col bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl overflow-hidden cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
     >
       {/* Finished Drink Image (4:3 ratio) */}
       <div className="relative aspect-4/3 w-full bg-[#17201B] overflow-hidden">
@@ -58,38 +59,38 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
           alt={recipe.name}
           loading="lazy"
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-full object-cover object-center hover-zoom-img"
           onError={(e) => {
             const target = e.currentTarget;
             target.style.display = 'none';
           }}
         />
-        {/* Soft lighting effect on hover */}
+        {/* Multi-stop eased scrim to eliminate banding */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-[#17201B]/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity pointer-events-none"
+          className="absolute inset-0 card-scrim-bottom opacity-65 group-hover:opacity-45 transition-[opacity] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] pointer-events-none"
         />
 
-        {/* Like button: Always visible on mobile, appears on hover/focus on desktop */}
+        {/* Like button: Always visible on mobile (with 44x44px invisible touch hitbox), appears on hover/focus on desktop */}
         <button
           type="button"
           disabled={likeBusy}
           onClick={handleLikeClick}
           aria-label={
             liked
-              ? `Unlike ${recipe.name} (${recipe.likesCount} likes)`
-              : `Like ${recipe.name} (${recipe.likesCount} likes)`
+              ? `Unlike ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
+              : `Like ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
           }
-          className={`absolute top-3 right-3 z-10 px-2.5 py-1.5 rounded-md text-xs font-mono-tabular flex items-center gap-1.5 transition-opacity duration-150 ${
+          className={`hit-target-44 pressable absolute top-3 right-3 z-10 px-2.5 py-1.5 rounded-lg text-xs font-mono-tabular flex items-center gap-1.5 transition-[transform,opacity,background-color,border-color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A] ${
             likeBusy ? 'opacity-60 cursor-wait' : 'cursor-pointer'
           } ${
             liked
-              ? 'bg-[#D7E07A] text-[#17201B] opacity-100 font-semibold'
-              : 'bg-[#17201B]/85 text-[#F5F3EC] border border-[#C9C5B8]/30 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:border-[#D7E07A]'
+              ? 'bg-[#D7E07A] text-[#17201B] opacity-100 font-semibold shadow-sm'
+              : 'bg-[#17201B]/85 backdrop-blur-sm text-[#F5F3EC] border border-[#F5F3EC]/20 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:border-[#D7E07A]'
           }`}
         >
           <Heart
-            className={`w-3.5 h-3.5 ${
+            className={`w-3.5 h-3.5 shrink-0 ${
               liked ? 'fill-[#17201B] text-[#17201B]' : 'text-[#D7E07A]'
             }`}
           />
@@ -103,12 +104,14 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
           <div className="flex items-center gap-2 text-xs text-[#17201B]/65 dark:text-[#C9C5B8]">
             <span>{recipe.category}</span>
             <span aria-hidden="true">·</span>
-            <span>{recipe.ingredients.length} products</span>
+            <span className="tabular-nums-strict">
+              {formatPluralCount(recipe.ingredients.length, 'product')}
+            </span>
           </div>
         )}
 
         <div className="flex items-baseline justify-between gap-4">
-          <h3 className="text-base font-semibold text-[#17201B] dark:text-[#F5F3EC] group-hover:text-[#294735] dark:group-hover:text-[#D7E07A] transition-colors">
+          <h3 className="text-base font-semibold text-[#17201B] dark:text-[#F5F3EC] group-hover:text-[#294735] dark:group-hover:text-[#D7E07A] transition-[color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
             {recipe.name}
           </h3>
 

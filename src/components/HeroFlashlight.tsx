@@ -18,8 +18,14 @@ interface HeroFlashlightProps {
 export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) => {
   const { theme, toggleTheme } = useApp();
   const containerRef = useRef<HTMLElement | null>(null);
-  // Spotlight coordinates relative to hero container
-  const [coords, setCoords] = useState<{ x: number; y: number }>({ x: 520, y: 310 });
+  const spotlightLayerRef = useRef<HTMLDivElement | null>(null);
+  const rimLayerRef = useRef<HTMLDivElement | null>(null);
+
+  // Zero-rerender pointer tracking: store live spotlight coords in refs and write directly to DOM
+  const coordsRef = useRef<{ x: number; y: number }>({ x: 520, y: 310 });
+  const radiusRef = useRef<number>(230);
+  const interactedRef = useRef<boolean>(false);
+
   const [isSpotlightVisible, setIsSpotlightVisible] = useState<boolean>(true);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [spotlightRadius, setSpotlightRadius] = useState<number>(230);
@@ -28,14 +34,27 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
   // Unified global Day/Night mode: dark theme = Night Mode, light theme = Day Mode
   const sceneMode: HeroSceneMode = theme === 'dark' ? 'night' : 'day';
 
+  const applySpotlightToDom = useCallback((x: number, y: number, radius: number) => {
+    coordsRef.current = { x, y };
+    const mask = buildSpotlightRadialMask(x, y, radius);
+    if (spotlightLayerRef.current) {
+      spotlightLayerRef.current.style.webkitMaskImage = mask;
+      spotlightLayerRef.current.style.maskImage = mask;
+    }
+    if (rimLayerRef.current) {
+      rimLayerRef.current.style.background = buildSpotlightRimBackground(x, y, radius);
+    }
+  }, []);
+
   const centerSpotlight = useCallback(() => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    setCoords({
-      x: Math.round(rect.width * 0.56),
-      y: Math.round(rect.height * 0.44),
-    });
-  }, []);
+    applySpotlightToDom(
+      Math.round(rect.width * 0.56),
+      Math.round(rect.height * 0.44),
+      radiusRef.current
+    );
+  }, [applySpotlightToDom]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -43,33 +62,44 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handler);
 
-    // Center initial spotlight position gracefully based on container dimensions
-    centerSpotlight();
-
     const handleResize = () => {
-      setSpotlightRadius(window.innerWidth < 768 ? 160 : 250);
+      const nextRadius = window.innerWidth < 768 ? 160 : 250;
+      radiusRef.current = nextRadius;
+      setSpotlightRadius(nextRadius);
+      applySpotlightToDom(coordsRef.current.x, coordsRef.current.y, nextRadius);
     };
     handleResize();
+    centerSpotlight();
     window.addEventListener('resize', handleResize);
 
     return () => {
       mediaQuery.removeEventListener('change', handler);
       window.removeEventListener('resize', handleResize);
     };
-  }, [centerSpotlight]);
+  }, [applySpotlightToDom, centerSpotlight]);
 
-  const updateCoordinates = useCallback((clientX: number, clientY: number) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setCoords({
-      x: Math.max(0, Math.min(rect.width, clientX - rect.left)),
-      y: Math.max(0, Math.min(rect.height, clientY - rect.top)),
-    });
+  const markInteractedOnce = useCallback(() => {
+    if (!interactedRef.current) {
+      interactedRef.current = true;
+      setHasInteracted(true);
+    }
   }, []);
 
+  const updateCoordinates = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+      const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+      // 1:1 TRACK phase: direct DOM ref write with zero easing, zero duration, zero React rerender
+      applySpotlightToDom(x, y, radiusRef.current);
+    },
+    [applySpotlightToDom]
+  );
+
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    setHasInteracted(true);
-    setIsSpotlightVisible(true);
+    markInteractedOnce();
+    if (!isSpotlightVisible) setIsSpotlightVisible(true);
     updateCoordinates(e.clientX, e.clientY);
   };
 
@@ -84,22 +114,22 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
   const handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
     if (e.touches.length > 0) {
-      setHasInteracted(true);
-      setIsSpotlightVisible(true);
+      markInteractedOnce();
+      if (!isSpotlightVisible) setIsSpotlightVisible(true);
       updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     if (e.touches.length > 0) {
-      setHasInteracted(true);
+      markInteractedOnce();
       setIsSpotlightVisible(true);
       updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
   const handleToggleSceneMode = () => {
-    setHasInteracted(true);
+    markInteractedOnce();
     // Intentional toggle switches the unified global Day/Night theme (pointer movement never changes theme)
     getNextHeroSceneMode(sceneMode);
     toggleTheme();
@@ -112,8 +142,19 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
   const isDaytimeMode = sceneMode === 'day';
 
   // Single reusable circular radial mask shared across both Night (Day reveal) and Daytime (Sunset reveal) modes
-  const radialMaskValue = buildSpotlightRadialMask(coords.x, coords.y, spotlightRadius);
-  const layerTransitionClass = reducedMotion ? 'transition-none' : 'transition-opacity duration-300';
+  const radialMaskValue = buildSpotlightRadialMask(
+    coordsRef.current.x,
+    coordsRef.current.y,
+    spotlightRadius
+  );
+  const initialRimBackground = buildSpotlightRimBackground(
+    coordsRef.current.x,
+    coordsRef.current.y,
+    spotlightRadius
+  );
+  const layerTransitionClass = reducedMotion
+    ? 'transition-none'
+    : 'transition-[opacity] duration-250 ease-[cubic-bezier(0.165,0.84,0.44,1)]';
 
   return (
     <section
@@ -154,6 +195,7 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
 
       {/* LAYER 2: Single Reusable Circular Flashlight Reveal Layer — Day (in Night mode) or Sunset (in Daytime mode) */}
       <div
+        ref={spotlightLayerRef}
         data-testid="hero-daytime-spotlight-layer"
         data-reveal-scene={isDaytimeMode ? 'sunset' : 'day'}
         className={`absolute inset-0 w-full h-full pointer-events-none ${layerTransitionClass}`}
@@ -188,23 +230,24 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
       {/* Subtle Ambient Spotlight Rim Highlight (Non-blocking, shared across both modes) */}
       {!reducedMotion && (
         <div
+          ref={rimLayerRef}
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+          className="absolute inset-0 pointer-events-none transition-[opacity] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]"
           style={{
             opacity: isSpotlightVisible ? 1 : 0,
-            background: buildSpotlightRimBackground(coords.x, coords.y, spotlightRadius),
+            background: initialRimBackground,
           }}
         />
       )}
 
-      {/* Measured Bottom Contrast Scrim so HACK YOUR SIP. headline & CTA buttons remain >= 4.5:1 readable while keeping upper storefront bright */}
+      {/* Multi-stop Eased Contrast Scrims (zero banding, >= 4.5:1 legibility) */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#17201B] via-[#17201B]/45 to-transparent"
+        className="absolute inset-0 pointer-events-none hero-scrim-bottom"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#17201B]/75 via-[#17201B]/20 to-transparent"
+        className="absolute inset-0 pointer-events-none hero-scrim-left"
       />
 
       {/* Interactive Content Overlay */}
@@ -237,16 +280,16 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
             <button
               type="button"
               onClick={() => onNavigate({ page: 'explore' })}
-              className="px-6 py-3.5 text-sm font-semibold bg-[#D7E07A] text-[#17201B] rounded-md hover:bg-[#e2ea8b] transition-colors flex items-center gap-2.5 whitespace-nowrap shrink-0 cursor-pointer shadow-lg"
+              className="pressable min-h-[44px] px-6 py-3 text-sm font-semibold bg-[#D7E07A] text-[#17201B] rounded-lg hover:bg-[#e2ea8b] flex items-center gap-2.5 whitespace-nowrap shrink-0 cursor-pointer shadow-[0_8px_24px_-8px_rgba(0,0,0,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17201B]"
             >
               <span>Explore Drink Hacks</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate({ page: 'submit' })}
-              className="px-6 py-3.5 text-sm font-medium bg-[#17201B]/80 text-[#F5F3EC] border border-[#C9C5B8]/50 hover:border-[#D7E07A] hover:text-[#D7E07A] rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer backdrop-blur-sm"
+              className="pressable min-h-[44px] px-6 py-3 text-sm font-medium bg-[#17201B]/80 text-[#F5F3EC] border border-[#F5F3EC]/25 hover:border-[#D7E07A]/80 hover:text-[#D7E07A] rounded-lg whitespace-nowrap shrink-0 cursor-pointer backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17201B]"
             >
               Create Your Own Hack
             </button>
@@ -262,10 +305,10 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
         >
           <div
             role="tooltip"
-            className={`pointer-events-none absolute bottom-full right-0 mb-2.5 w-max max-w-[230px] sm:max-w-none sm:whitespace-nowrap px-3 py-1.5 rounded-md bg-[#17201B]/90 backdrop-blur-md border border-[#294735] text-[11px] text-[#F5F3EC] shadow-lg transition-opacity duration-300 ${
+            className={`pointer-events-none absolute bottom-full right-0 mb-2.5 origin-bottom-right w-max max-w-[230px] sm:max-w-none sm:whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#17201B]/92 backdrop-blur-md border border-[#D7E07A]/20 text-[11px] text-[#F5F3EC] shadow-[0_12px_28px_-8px_rgba(0,0,0,0.55)] transition-[transform,opacity,filter] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${
               hasInteracted
-                ? 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
-                : 'opacity-100'
+                ? 'opacity-0 scale-95 blur-[2px] group-hover:opacity-100 group-hover:scale-100 group-hover:blur-none group-focus-within:opacity-100 group-focus-within:scale-100 group-focus-within:blur-none'
+                : 'opacity-100 scale-100 blur-none'
             }`}
           >
             {isDaytimeMode
@@ -283,12 +326,12 @@ export const HeroFlashlight: React.FC<HeroFlashlightProps> = ({ onNavigate }) =>
                 ? 'Move your cursor to reveal sunset view'
                 : 'Move your cursor to reveal daytime view'
             }
-            className="w-11 h-11 rounded-full bg-[#17201B]/85 backdrop-blur-md border border-[#294735] hover:border-[#D7E07A] text-[#D7E07A] hover:bg-[#294735] shadow-lg transition-colors flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A]"
+            className="pressable w-11 h-11 rounded-full bg-[#17201B]/85 backdrop-blur-md border border-[#D7E07A]/25 hover:border-[#D7E07A] text-[#D7E07A] hover:bg-[#294735] shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)] flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A]"
           >
             {isDaytimeMode ? (
-              <Moon className="w-4 h-4" />
+              <Moon className="w-4 h-4 shrink-0" />
             ) : (
-              <Flashlight className="w-4 h-4" />
+              <Flashlight className="w-4 h-4 shrink-0" />
             )}
           </button>
         </div>

@@ -153,7 +153,7 @@ const AppRouter: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] transition-colors">
+    <div className="min-h-dvh flex flex-col bg-[#F5F3EC] dark:bg-[#17201B] text-[#17201B] dark:text-[#F5F3EC] transition-[background-color,color] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)]">
       <Navbar currentRoute={route} onNavigate={handleNavigate} />
 
       <main className="flex-1">
