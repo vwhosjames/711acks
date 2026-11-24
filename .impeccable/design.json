@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-24T21:51:00Z",
+  "title": "Design System: 711acks",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Deep Cypress Forest",
+        "canonical": "#294735",
+        "tonalRamp": ["#0e1812", "#1b2f23", "#294735", "#3a644b", "#4f8263", "#73a587", "#a3c7b2", "#d9e8df"]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Electric Citron Lime",
+        "canonical": "#D7E07A",
+        "tonalRamp": ["#35390f", "#5b621a", "#869026", "#b0be34", "#d7e07a", "#e4ec9d", "#eff5c1", "#f7fae4"]
+      },
+      "neutral-dark": {
+        "role": "neutral",
+        "displayName": "Obsidian Midnight",
+        "canonical": "#17201B",
+        "tonalRamp": ["#080b09", "#101613", "#17201B", "#26342c", "#3c5044", "#5d7767", "#93a89c", "#dbe3de"]
+      },
+      "neutral-light": {
+        "role": "neutral",
+        "displayName": "Linen Cream",
+        "canonical": "#F5F3EC",
+        "tonalRamp": ["#2d2b24", "#524f43", "#7d7967", "#aba68f", "#d2ceb9", "#e4e1d2", "#F5F3EC", "#fcfbf9"]
+      },
+      "neutral-muted": {
+        "role": "neutral",
+        "displayName": "Pumice Gray",
+        "canonical": "#C9C5B8",
+        "tonalRamp": ["#21201c", "#3f3d35", "#636055", "#8c8779", "#b0aba0", "#C9C5B8", "#dedbd3", "#f2f1ee"]
+      },
+      "pure-white": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#1f1f1f", "#3d3d3d", "#5c5c5c", "#7a7a7a", "#999999", "#b8b8b8", "#d6d6d6", "#FFFFFF"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline and wordmark branding" },
+      "headline": { "displayName": "Headline", "purpose": "Section titles and major modal headers" },
+      "body": { "displayName": "Body", "purpose": "Standard narrative copy and ingredient specifications" },
+      "label": { "displayName": "Label", "purpose": "Interactive buttons, form labels, and category badges" },
+      "mono": { "displayName": "Monospace", "purpose": "Verified PHP price figures and tabular calculations" }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 2px rgba(23, 32, 27, 0.04), 0 6px 18px -8px rgba(23, 32, 27, 0.08)",
+        "purpose": "Default resting card elevation with soft ambient spread."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 2px 4px rgba(23, 32, 27, 0.06), 0 14px 30px -12px rgba(23, 32, 27, 0.14)",
+        "purpose": "Expanded lift shadow on fine-pointer card hover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.165, 0.84, 0.44, 1)",
+        "purpose": "Primary transition curve for UI enter/exit (150ms-250ms, strictly < 300ms). Never use ease-in or transition: all."
+      },
+      {
+        "name": "ease-sheet",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "Deceleration curve for full-width mobile bottom sheets and drawers (200ms-240ms)."
+      },
+      {
+        "name": "spring-release-snap",
+        "value": "cubic-bezier(0.22, 1.12, 0.36, 1)",
+        "purpose": "Subtle physical spring bounce (260ms) applied strictly on drag release snap-back (zero bounce on button or Escape closes)."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.45, 0, 0.55, 1)",
+        "purpose": "Smooth morphing and theme transition timing."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-emphasis call to action for submitting hacks and primary confirmations.",
+      "html": "<button class=\"ds-btn-primary\">SUBMIT A HACK</button>",
+      "css": ".ds-btn-primary { background: #294735; color: #F5F3EC; height: 40px; padding: 0 16px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border: none; cursor: pointer; transition: transform 160ms cubic-bezier(0.165, 0.84, 0.44, 1), opacity 160ms cubic-bezier(0.165, 0.84, 0.44, 1); } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Accent Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "High-contrast electric citron button used in dark mode or for spotlight triggers.",
+      "html": "<button class=\"ds-btn-accent\">EXPLORE HACKS</button>",
+      "css": ".ds-btn-accent { background: #D7E07A; color: #17201B; height: 40px; padding: 0 16px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border: none; cursor: pointer; transition: transform 160ms cubic-bezier(0.165, 0.84, 0.44, 1), opacity 160ms cubic-bezier(0.165, 0.84, 0.44, 1); } .ds-btn-accent:hover { opacity: 0.92; } .ds-btn-accent:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Like Pill Button",
+      "kind": "button",
+      "refersTo": "button-like",
+      "description": "Floating card action displaying heart icon and like count with micro-hitbox expansion.",
+      "html": "<button class=\"ds-like-pill\"><svg class=\"ds-heart-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"/></svg><span>24</span></button>",
+      "css": ".ds-like-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; background: rgba(23, 32, 27, 0.85); backdrop-filter: blur(4px); color: #F5F3EC; border: 1px solid rgba(245, 243, 236, 0.2); font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1), border-color 150ms cubic-bezier(0.165, 0.84, 0.44, 1); } .ds-heart-icon { width: 14px; height: 14px; stroke: #D7E07A; } .ds-like-pill:hover { border-color: #D7E07A; } .ds-like-pill:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Drink Card",
+      "kind": "card",
+      "refersTo": "card-drink",
+      "description": "Grid article card presenting recipe photo, title, and verified total purchase price.",
+      "html": "<article class=\"ds-drink-card\"><div class=\"ds-card-media\"><div class=\"ds-card-scrim\"></div></div><div class=\"ds-card-body\"><div class=\"ds-card-title\">Chuckie Dirty Float</div><div class=\"ds-card-price\"><span class=\"ds-price-label\">Total Cost</span><span class=\"ds-price-val\">₱75.00</span></div></div></article>",
+      "css": ".ds-drink-card { background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(23, 32, 27, 0.11); box-shadow: 0 1px 2px rgba(23, 32, 27, 0.04), 0 6px 18px -8px rgba(23, 32, 27, 0.08); overflow: hidden; cursor: pointer; transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1), border-color 200ms cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 200ms cubic-bezier(0.165, 0.84, 0.44, 1); } .ds-drink-card:hover { transform: translate3d(0, -2px, 0); border-color: rgba(41, 71, 53, 0.42); box-shadow: 0 2px 4px rgba(23, 32, 27, 0.06), 0 14px 30px -12px rgba(23, 32, 27, 0.14); } .ds-card-media { width: 100%; aspect-ratio: 4 / 3; background: #17201B; position: relative; } .ds-card-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(23, 32, 27, 0.62) 0%, rgba(23, 32, 27, 0) 100%); } .ds-card-body { padding: 14px 16px; } .ds-card-title { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 600; color: #17201B; margin-bottom: 6px; } .ds-card-price { display: flex; justify-content: space-between; align-items: baseline; } .ds-price-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; text-transform: uppercase; color: #294735; letter-spacing: 0.05em; font-weight: 600; } .ds-price-val { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600; color: #17201B; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Standard single-line text input with hairline border and focused brand ring.",
+      "html": "<input type=\"text\" class=\"ds-input\" placeholder=\"Search drink hacks or ingredients...\" />",
+      "css": ".ds-input { width: 100%; height: 44px; padding: 0 14px; border-radius: 8px; background: #FFFFFF; border: 1px solid rgba(23, 32, 27, 0.2); color: #17201B; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 150ms cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 150ms cubic-bezier(0.165, 0.84, 0.44, 1); } .ds-input:focus { border-color: #294735; box-shadow: 0 0 0 2px rgba(41, 71, 53, 0.25); }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "nav-header",
+      "description": "Sticky blurred frosted header with wordmark, navigation links, and primary CTA.",
+      "html": "<header class=\"ds-nav\"><div class=\"ds-wordmark\">711ACKS</div><nav class=\"ds-nav-links\"><span class=\"ds-link ds-link-active\">Home</span><span class=\"ds-link\">Explore</span><span class=\"ds-link\">Favorites</span></nav><button class=\"ds-btn-primary\">SUBMIT A HACK</button></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(245, 243, 236, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(23, 32, 27, 0.1); } .ds-wordmark { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 300; letter-spacing: 0.22em; text-transform: uppercase; color: #17201B; } .ds-nav-links { display: flex; gap: 24px; } .ds-link { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(23, 32, 27, 0.75); cursor: pointer; } .ds-link-active { font-weight: 600; color: #17201B; border-bottom: 2px solid #294735; padding-bottom: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Midnight Bodega",
+    "overview": "The visual world of 711acks reflects the ambient warmth, late-night quietude, and distinct glow of an after-hours 7-Eleven in the Philippines, reframed through a disciplined, high-craft editorial lens. Rather than mimicking commercial retail noise or adopting generic SaaS card templates, the interface treats beverage hacks as handcrafted discoveries. Deep cypress tones, obsidian shadows, and linen backgrounds provide a rich, tactile canvas illuminated by razor-sharp citron accents and soft light reveals.\n\nEvery screen balances high-utility mobile scanability with cinematic atmosphere. The dual-theme 'Midnight Green' architecture transitions seamlessly between the warm daylight of Linen Cream (#F5F3EC) and the immersive nighttime depth of Obsidian Midnight (#17201B). Subtle micro-spring presses, 44px minimum touch targets, and fine-pointer hover lifts give the application a physical, responsive presence that honors convenience-store immediacy without sacrificing editorial restraint.",
+    "keyCharacteristics": [
+      "Atmospheric lighting and multi-stop eased gradients that eliminate banding",
+      "Oversized ultra-light display typography paired with crystal-clear tabular figures",
+      "Translucent hairline borders and ambient depth over heavy drop shadows",
+      "High-contrast, touch-optimized ergonomics tailored for mobile convenience-store browsing",
+      "Strict separation between fan-made editorial minimalism and commercial retail clutter"
+    ],
+    "rules": [
+      {
+        "name": "The Citron Rarity Rule",
+        "body": "Electric Citron Lime (#D7E07A) must never cover more than 8% of any given screen. Its power comes from scarcity—a focused beam of light directing attention to likes, active filters, and primary confirmations.",
+        "section": "colors"
+      },
+      {
+        "name": "The Heritage Stripe Rule",
+        "body": "The official 7-Eleven-inspired colors (Orange #F58220, Green #008061, Red #EE2526) exist strictly as a single 3px decorative hairline in the site footer. They are never permitted on buttons, cards, or hero elements, preserving the project's independent identity.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Price Rule",
+        "body": "Every currency figure, purchase cost, and quantity count must strictly render in JetBrains Mono or enforce font-variant-numeric: tabular-nums (tabular-nums-strict). Figures must never jump or misalign during state changes or real-time calculations.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light Display Rule",
+        "body": "Display headings larger than 24px must always use font weights of 300 or lighter. Heavy display weights create brutish promotional posters; light weights create editorial luxury.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline Depth Rule",
+        "body": "Depth is primarily articulated through translucent hairline borders and background tonal contrast; drop shadows never cast harsh black cutouts.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Fine-Pointer Hover Rule",
+        "body": "Transform lifts (translate3d(0, -2px, 0)) and card-zoom effects (scale(1.04)) are strictly scoped inside @media (hover: hover) and (pointer: fine). Mobile touch screens never trigger sticky hover states.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Pressable Feedback Rule",
+        "body": "All interactive elements must implement the .pressable utility, applying GPU-accelerated scaling (transform: scale(0.97)) on :active with a snappy 160ms ease-out curve (cubic-bezier(0.165, 0.84, 0.44, 1)).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Sub-300ms Transition Rule",
+        "body": "All standard UI interface transitions must complete in under 300ms (targeted 150ms–250ms). Animations exist to clarify physical state changes, never to entertain or keep users waiting.",
+        "section": "motion"
+      },
+      {
+        "name": "The Compositor-Only Rule",
+        "body": "Animations must touch only transform, opacity, or sub-20px filter: blur. Any animation touching layout or box-model dimensions is rejected during review.",
+        "section": "motion"
+      },
+      {
+        "name": "The Zero-Rerender Gesture Rule",
+        "body": "High-frequency pointer and touch move handlers must never call React setState. Store live coordinates in mutable refs and write styles directly to element refs.",
+        "section": "motion"
+      },
+      {
+        "name": "The Velocity-Seeded Dismiss Rule",
+        "body": "Bottom sheets dismiss on ≥40% displacement or >500px/s flick velocity. Subtle spring bounce is isolated strictly to physical drag snap-backs; button and Escape closes remain bounce-free.",
+        "section": "motion"
+      }
+    ],
+    "dos": [
+      "Do display all product prices and total purchase sums in Philippine Pesos (₱) using strict tabular numeric typography.",
+      "Do enforce an invisible 44x44px minimum hit target (.hit-target-44) on all touch targets regardless of their visible visual size.",
+      "Do constrain all UI transitions to 150ms–250ms (strictly < 300ms) using cubic-bezier(0.165, 0.84, 0.44, 1).",
+      "Do animate only GPU-accelerated compositor properties (transform, opacity, and micro-blurs < 20px).",
+      "Do track touch and pointer gestures 1:1 with zero artificial easing and zero React re-renders during drag events.",
+      "Do dismiss swipeable modals when drag displacement reaches ≥ 40% or downward flick velocity exceeds 500px/s.",
+      "Do isolate spring bounce strictly to physical drag release snap-backs (keeping button/Escape closes bounce-free).",
+      "Do use multi-stop eased gradients (at least 4 stops) whenever overlaying dark scrims on food and beverage photography.",
+      "Do honor reduced motion preferences by canceling spring transforms and auto-scroll behaviors under @media (prefers-reduced-motion: reduce).",
+      "Do keep product ingredient cards focused on commercial shelf packaging photos and full-unit retail pricing."
+    ],
+    "donts": [
+      "Don't use ease-in timing curves or blanket transition: all.",
+      "Don't animate layout geometry such as width, height, top, left, padding, or margin.",
+      "Don't trigger React state re-renders inside pointermove or touchmove gesture loops.",
+      "Don't add spring bounces to programmatic button clicks or keyboard Escape dismissals.",
+      "Don't use standard two-stop linear gradients that create harsh banding edges over dark backgrounds.",
+      "Don't attach hover effects (:hover) without qualifying @media (hover: hover) and (pointer: fine).",
+      "Don't apply heavy drop shadows or colored glow halos that distract from clean photographic packaging assets.",
+      "Don't use official 7-Eleven logos, trademarked slogans, or official promotional badge graphics.",
+      "Don't introduce step-by-step recipe cooking tutorials, difficulty meters, or prep-time badges."
+    ]
+  }
+}
