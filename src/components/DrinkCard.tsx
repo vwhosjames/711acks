@@ -37,23 +37,21 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
   };
 
   return (
-    <article
-      onClick={() => onSelect(recipe.slug)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelect(recipe.slug);
-        }
-      }}
-      aria-label={`View ${recipe.name} details, total purchase cost ${formatPhpCurrency(
-        recipe.totalPurchaseCost
-      )}`}
-      className="group relative flex flex-col bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl overflow-hidden cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
-    >
+    <article className="group relative flex flex-col bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card-interactive rounded-xl overflow-hidden text-left">
+      {/* Primary Click Action Overlay */}
+      <button
+        type="button"
+        onClick={() => onSelect(recipe.slug)}
+        aria-label={`View ${recipe.name} details, total purchase cost ${formatPhpCurrency(
+          recipe.totalPurchaseCost
+        )}`}
+        className="absolute inset-0 z-0 w-full h-full cursor-pointer rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#294735] dark:focus-visible:ring-[#D7E07A]"
+      >
+        <span className="sr-only">View {recipe.name} details</span>
+      </button>
+
       {/* Finished Drink Image (4:3 ratio) */}
-      <div className="relative aspect-4/3 w-full bg-[#17201B] overflow-hidden">
+      <div className="relative aspect-4/3 w-full bg-[#17201B] overflow-hidden pointer-events-none">
         <img
           src={recipe.photoUrl}
           alt={recipe.name}
@@ -70,36 +68,36 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
           aria-hidden="true"
           className="absolute inset-0 card-scrim-bottom opacity-65 group-hover:opacity-45 transition-[opacity] duration-200 ease-[cubic-bezier(0.165,0.84,0.44,1)] pointer-events-none"
         />
-
-        {/* Like button: Always visible on mobile (with 44x44px invisible touch hitbox), appears on hover/focus on desktop */}
-        <button
-          type="button"
-          disabled={likeBusy}
-          onClick={handleLikeClick}
-          aria-label={
-            liked
-              ? `Unlike ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
-              : `Like ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
-          }
-          className={`hit-target-44 pressable absolute top-3 right-3 z-10 px-2.5 py-1.5 rounded-lg text-xs font-mono-tabular flex items-center gap-1.5 transition-[transform,opacity,background-color,border-color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A] ${
-            likeBusy ? 'opacity-60 cursor-wait' : 'cursor-pointer'
-          } ${
-            liked
-              ? 'bg-[#D7E07A] text-[#17201B] opacity-100 font-semibold shadow-sm'
-              : 'bg-[#17201B]/85 backdrop-blur-sm text-[#F5F3EC] border border-[#F5F3EC]/20 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:border-[#D7E07A]'
-          }`}
-        >
-          <Heart
-            className={`w-3.5 h-3.5 shrink-0 ${
-              liked ? 'fill-[#17201B] text-[#17201B]' : 'text-[#D7E07A]'
-            }`}
-          />
-          <span>{recipe.likesCount}</span>
-        </button>
       </div>
 
+      {/* Like button: Sibling control above overlay, pointer-events-auto */}
+      <button
+        type="button"
+        disabled={likeBusy}
+        onClick={handleLikeClick}
+        aria-label={
+          liked
+            ? `Unlike ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
+            : `Like ${recipe.name} (${formatPluralCount(recipe.likesCount, 'like')})`
+        }
+        className={`hit-target-44 pressable absolute top-3 right-3 z-10 px-2.5 py-1.5 rounded-lg text-xs font-mono-tabular flex items-center gap-1.5 transition-[transform,opacity,background-color,border-color] duration-150 ease-[cubic-bezier(0.165,0.84,0.44,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D7E07A] pointer-events-auto ${
+          likeBusy ? 'opacity-60 cursor-wait' : 'cursor-pointer'
+        } ${
+          liked
+            ? 'bg-[#D7E07A] text-[#17201B] opacity-100 font-semibold shadow-sm'
+            : 'bg-[#17201B]/85 backdrop-blur-sm text-[#F5F3EC] border border-[#F5F3EC]/20 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:border-[#D7E07A]'
+        }`}
+      >
+        <Heart
+          className={`w-3.5 h-3.5 shrink-0 ${
+            liked ? 'fill-[#17201B]' : 'text-[#D7E07A]'
+          }`}
+        />
+        <span>{recipe.likesCount}</span>
+      </button>
+
       {/* Card Body: Strictly Drink Name + Total Purchase Cost (plus quiet inline metadata only when requested on homepage editorial rows) */}
-      <div className="p-4 flex flex-col justify-between flex-1 gap-2">
+      <div className="p-4 flex flex-col justify-between flex-1 gap-2 pointer-events-none">
         {showExtendedMeta && (
           <div className="flex items-center gap-2 text-xs text-[#17201B]/65 dark:text-[#C9C5B8]">
             <span>{recipe.category}</span>

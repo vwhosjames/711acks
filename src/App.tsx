@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Suspense, lazy } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar, PublicRoute } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -15,7 +15,6 @@ import { FavoritesPage } from './pages/FavoritesPage';
 import { SubmitHackPage } from './pages/SubmitHackPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { APPROVED_CATEGORIES } from './types/domain';
 import {
   adminRouteToPath,
@@ -23,6 +22,32 @@ import {
   parseAdminPath,
   resolveProtectedAdminRoute,
 } from './lib/adminRoutes';
+
+const AdminDashboardPage = lazy(() =>
+  import('./pages/AdminDashboardPage').then((module) => ({
+    default: module.AdminDashboardPage,
+  }))
+);
+
+const AdminLoadingFallback: React.FC = () => (
+  <div
+    role="status"
+    aria-live="polite"
+    className="min-h-dvh flex flex-col items-center justify-center bg-[#17201B] text-[#F5F3EC] px-6 select-none"
+  >
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="w-8 h-8 rounded-full border-2 border-[#D7E07A]/20 border-t-[#D7E07A] animate-spin" />
+      <div className="space-y-1">
+        <p className="font-display text-sm tracking-widest uppercase text-[#D7E07A]">
+          711acks Terminal
+        </p>
+        <p className="text-xs text-[#C9C5B8] font-mono-tabular">
+          Loading administration console...
+        </p>
+      </div>
+    </div>
+  </div>
+);
 
 function parseLocationToRoute(): PublicRoute {
   const path = normalizePathname(window.location.pathname);
@@ -140,10 +165,12 @@ const AppRouter: React.FC = () => {
       window.location.pathname
     );
     return (
-      <AdminDashboardPage
-        activeView={effectiveRoute.adminView}
-        onNavigate={handleNavigate}
-      />
+      <Suspense fallback={<AdminLoadingFallback />}>
+        <AdminDashboardPage
+          activeView={effectiveRoute.adminView}
+          onNavigate={handleNavigate}
+        />
+      </Suspense>
     );
   }
 

@@ -683,10 +683,14 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                     {row.mode === 'catalog' ? (
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                         <div className="md:col-span-6 space-y-1.5">
-                          <label className="block text-xs font-medium">
+                          <label
+                            htmlFor={`sub-catalog-product-${row.rowId}`}
+                            className="block text-xs font-medium"
+                          >
                             Select Verified 7-Eleven Product *
                           </label>
                           <select
+                            id={`sub-catalog-product-${row.rowId}`}
                             value={row.productId}
                             onChange={(e) =>
                               setIngredients((prev) =>
@@ -730,10 +734,14 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium">
+                          <label
+                            htmlFor={`sub-custom-name-${row.rowId}`}
+                            className="block text-xs font-medium"
+                          >
                             Suggested Product Name *
                           </label>
                           <input
+                            id={`sub-custom-name-${row.rowId}`}
                             type="text"
                             value={row.suggestedProductName}
                             onChange={(e) =>
@@ -746,15 +754,19 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                               )
                             }
                             placeholder="e.g. Bear Brand Sterilized 200ml"
-                            className="w-full min-h-[44px] px-3 py-2 text-base sm:text-xs bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg"
+                            className="w-full min-h-[44px] px-3 py-2 text-base sm:text-sm bg-[#FFFFFF] dark:bg-[#1E2B23] border border-[#17201B]/16 dark:border-[#D7E07A]/18 rounded-lg"
                           />
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium">
+                          <label
+                            htmlFor={`sub-custom-price-${row.rowId}`}
+                            className="block text-xs font-medium"
+                          >
                             Suggested Price in ₱ (Optional, Unverified)
                           </label>
                           <input
+                            id={`sub-custom-price-${row.rowId}`}
                             type="number"
                             min="0"
                             step="0.5"
@@ -774,10 +786,14 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium">
+                          <label
+                            htmlFor={`sub-custom-photo-${row.rowId}`}
+                            className="block text-xs font-medium"
+                          >
                             Optional Product Photo (Private Review)
                           </label>
                           <input
+                            id={`sub-custom-photo-${row.rowId}`}
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
                             disabled={
@@ -819,10 +835,14 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                     {/* Quantity Used vs Whole Units to Purchase */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#C9C5B8]/30 dark:border-[#294735]">
                       <div className="space-y-1">
-                        <label className="block text-xs font-medium">
+                        <label
+                          htmlFor={`sub-quantity-used-${row.rowId}`}
+                          className="block text-xs font-medium"
+                        >
                           Amount / Quantity Used in Drink *
                         </label>
                         <input
+                          id={`sub-quantity-used-${row.rowId}`}
                           type="text"
                           value={row.quantityUsed}
                           onChange={(e) =>
@@ -840,10 +860,14 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                       </div>
 
                       <div className="space-y-1">
-                        <label className="block text-xs font-medium">
+                        <label
+                          htmlFor={`sub-units-purchase-${row.rowId}`}
+                          className="block text-xs font-medium"
+                        >
                           Full Units to Purchase at 7&#8209;Eleven Counter *
                         </label>
                         <input
+                          id={`sub-units-purchase-${row.rowId}`}
                           type="number"
                           min="1"
                           max="10"
@@ -886,7 +910,10 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
             )}
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-              <label className="pressable min-h-[44px] inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border border-[#17201B]/18 dark:border-[#D7E07A]/20 rounded-lg cursor-pointer hover-border-accent">
+              <label
+                htmlFor="sub-finished-photo"
+                className="pressable min-h-[44px] inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border border-[#17201B]/18 dark:border-[#D7E07A]/20 rounded-lg cursor-pointer hover-border-accent"
+              >
                 <Upload className="w-4 h-4 shrink-0" />
                 <span>
                   {finishedUploadPhase === 'validating'
@@ -896,6 +923,7 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
                     : 'Select Image (JPG, PNG, WebP · Max 5MB)'}
                 </span>
                 <input
+                  id="sub-finished-photo"
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   disabled={
@@ -941,8 +969,12 @@ export const SubmitHackPage: React.FC<SubmitHackPageProps> = ({ onNavigate }) =>
 
           {/* Submission Confirmation Checkbox & Preview Trigger */}
           <div className="p-6 bg-[#FFFFFF] dark:bg-[#1E2B23] surface-card rounded-xl space-y-5">
-            <label className="flex items-start gap-3 text-xs sm:text-sm cursor-pointer">
+            <label
+              htmlFor="sub-confirm-terms"
+              className="flex items-start gap-3 text-xs sm:text-sm cursor-pointer"
+            >
               <input
+                id="sub-confirm-terms"
                 type="checkbox"
                 checked={confirmedSubmissionTerms}
                 onChange={(e) => setConfirmedSubmissionTerms(e.target.checked)}

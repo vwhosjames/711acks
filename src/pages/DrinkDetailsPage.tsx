@@ -454,6 +454,7 @@ export const DrinkDetailsPage: React.FC<DrinkDetailsPageProps> = ({
                             src={ing.productPhotoSnapshot}
                             alt={ing.productNameSnapshot}
                             referrerPolicy="no-referrer"
+                            loading="lazy"
                             className="w-full h-full object-cover hover-zoom-img"
                           />
                           <span className="absolute bottom-1 right-1 p-1 rounded-md bg-[#17201B]/85 text-[#D7E07A]">

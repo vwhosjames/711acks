@@ -84,7 +84,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search drink name or 7-Eleven product (e.g. Chuckie, Lychee)..."
-              className="w-full min-h-[44px] pl-10 pr-4 py-2 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/14 dark:border-[#D7E07A]/16 rounded-lg text-[#17201B] dark:text-[#F5F3EC] placeholder:text-[#17201B]/45 dark:placeholder:text-[#C9C5B8]/60 focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A] transition-[border-color] duration-150"
+              className="w-full min-h-[44px] pl-10 pr-4 py-2 text-base sm:text-sm bg-[#F5F3EC] dark:bg-[#17201B] border border-[#17201B]/14 dark:border-[#D7E07A]/16 rounded-lg text-[#17201B] dark:text-[#F5F3EC] placeholder:text-[#17201B]/65 dark:placeholder:text-[#C9C5B8]/60 focus:outline-none focus:border-[#294735] dark:focus:border-[#D7E07A] transition-[border-color] duration-150"
             />
           </div>
 
@@ -97,7 +97,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             <button
               type="button"
               onClick={() => setSelectedCategory('ALL')}
-              className={`pressable min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`hit-target-44 pressable min-h-[44px] sm:min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedCategory === 'ALL'
                   ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold shadow-xs'
                   : 'text-[#17201B]/75 dark:text-[#C9C5B8] hover:text-[#17201B] dark:hover:text-[#FFFFFF]'
@@ -110,7 +110,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`pressable min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
+                className={`hit-target-44 pressable min-h-[44px] sm:min-h-[38px] px-3.5 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 cursor-pointer ${
                   selectedCategory === cat
                     ? 'bg-[#294735] text-[#F5F3EC] dark:bg-[#D7E07A] dark:text-[#17201B] font-semibold shadow-xs'
                     : 'text-[#17201B]/75 dark:text-[#C9C5B8] hover:text-[#17201B] dark:hover:text-[#FFFFFF]'

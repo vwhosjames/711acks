@@ -1303,10 +1303,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-1">
-                      <label className="block text-xs font-semibold">
+                      <label htmlFor="admin-recipe-name" className="block text-xs font-semibold">
                         Drink Name *
                       </label>
                       <input
+                        id="admin-recipe-name"
                         type="text"
                         value={recipeName}
                         onChange={(e) => setRecipeName(e.target.value)}
@@ -1315,10 +1316,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     </div>
 
                     <div className="space-y-1">
-                      <label className="block text-xs font-semibold">
+                      <label htmlFor="admin-recipe-category" className="block text-xs font-semibold">
                         Primary Category *
                       </label>
                       <select
+                        id="admin-recipe-category"
                         value={recipeCategory}
                         onChange={(e) =>
                           setRecipeCategory(e.target.value as DrinkCategory)
@@ -1334,10 +1336,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     </div>
 
                     <div className="space-y-1">
-                      <label className="block text-xs font-semibold">
+                      <label htmlFor="admin-recipe-status" className="block text-xs font-semibold">
                         Status *
                       </label>
                       <select
+                        id="admin-recipe-status"
                         value={recipeStatus}
                         onChange={(e) =>
                           setRecipeStatus(e.target.value as RecipeStatus)
@@ -1355,10 +1358,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="block text-xs font-semibold">
+                      <label htmlFor="admin-recipe-taste-notes" className="block text-xs font-semibold">
                         Taste Notes
                       </label>
                       <input
+                        id="admin-recipe-taste-notes"
                         type="text"
                         value={recipeTasteNotes}
                         onChange={(e) => setRecipeTasteNotes(e.target.value)}
@@ -1367,16 +1371,18 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     </div>
 
                     <div className="flex items-center gap-6 pt-5 text-xs">
-                      <label className="flex items-center gap-2 cursor-pointer">
+                      <label htmlFor="admin-recipe-editors-pick" className="flex items-center gap-2 cursor-pointer">
                         <input
+                          id="admin-recipe-editors-pick"
                           type="checkbox"
                           checked={recipeEditorsPick}
                           onChange={(e) => setRecipeEditorsPick(e.target.checked)}
                         />
                         <span>Editor&apos;s Pick</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
+                      <label htmlFor="admin-recipe-trending" className="flex items-center gap-2 cursor-pointer">
                         <input
+                          id="admin-recipe-trending"
                           type="checkbox"
                           checked={recipeTrending}
                           onChange={(e) => setRecipeTrending(e.target.checked)}
@@ -1423,7 +1429,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         className="p-3 bg-[#F5F3EC] dark:bg-[#17201B] rounded border border-[#C9C5B8]/50 dark:border-[#294735] grid grid-cols-1 sm:grid-cols-12 gap-3 items-center text-xs"
                       >
                         <div className="sm:col-span-5">
+                          <label
+                            htmlFor={`admin-recipe-ing-prod-${ing.id || i}`}
+                            className="sr-only"
+                          >
+                            Product
+                          </label>
                           <select
+                            id={`admin-recipe-ing-prod-${ing.id || i}`}
                             value={ing.productId || ''}
                             onChange={(e) => {
                               const found = products.find(
@@ -1456,7 +1469,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         </div>
 
                         <div className="sm:col-span-4">
+                          <label
+                            htmlFor={`admin-recipe-ing-qty-${ing.id || i}`}
+                            className="sr-only"
+                          >
+                            Amount used
+                          </label>
                           <input
+                            id={`admin-recipe-ing-qty-${ing.id || i}`}
                             type="text"
                             value={ing.quantityUsed}
                             onChange={(e) =>
@@ -1474,7 +1494,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         </div>
 
                         <div className="sm:col-span-2">
+                          <label
+                            htmlFor={`admin-recipe-ing-units-${ing.id || i}`}
+                            className="sr-only"
+                          >
+                            Units to purchase
+                          </label>
                           <input
+                            id={`admin-recipe-ing-units-${ing.id || i}`}
                             type="number"
                             min="1"
                             value={ing.unitsToPurchase}
@@ -1711,8 +1738,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-1">
-                      <label className="font-semibold">Drink Name</label>
+                      <label htmlFor="admin-approval-name" className="font-semibold">Drink Name</label>
                       <input
+                        id="admin-approval-name"
                         type="text"
                         value={approvalName}
                         onChange={(e) => setApprovalName(e.target.value)}
@@ -1720,8 +1748,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="font-semibold">Primary Category</label>
+                      <label htmlFor="admin-approval-category" className="font-semibold">Primary Category</label>
                       <select
+                        id="admin-approval-category"
                         value={approvalCategory}
                         onChange={(e) =>
                           setApprovalCategory(e.target.value as DrinkCategory)
@@ -1758,9 +1787,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <label className="flex items-center gap-1">
+                          <label
+                            htmlFor={`admin-approval-price-${ing.id || idx}`}
+                            className="flex items-center gap-1"
+                          >
                             <span>Unit Price ₱:</span>
                             <input
+                              id={`admin-approval-price-${ing.id || idx}`}
                               type="number"
                               step="0.5"
                               value={ing.priceSnapshot ?? ''}
@@ -1782,8 +1815,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                             />
                           </label>
 
-                          <label className="flex items-center gap-1.5 cursor-pointer">
+                          <label
+                            htmlFor={`admin-approval-verified-${ing.id || idx}`}
+                            className="flex items-center gap-1.5 cursor-pointer"
+                          >
                             <input
+                              id={`admin-approval-verified-${ing.id || idx}`}
                               type="checkbox"
                               checked={ing.priceVerified}
                               onChange={(e) =>
@@ -1985,8 +2022,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-1">
-                    <label className="block font-medium">Product Name *</label>
+                    <label htmlFor="admin-prod-name" className="block font-medium">Product Name *</label>
                     <input
+                      id="admin-prod-name"
                       type="text"
                       required
                       value={prodName}
@@ -1997,10 +2035,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block font-medium">
+                    <label htmlFor="admin-prod-price" className="block font-medium">
                       Purchase Price (₱) *
                     </label>
                     <input
+                      id="admin-prod-price"
                       type="number"
                       step="0.25"
                       min="0"
@@ -2013,10 +2052,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block font-medium">
+                    <label htmlFor="admin-prod-barcode" className="block font-medium">
                       Barcode (Optional Manual Entry)
                     </label>
                     <input
+                      id="admin-prod-barcode"
                       type="text"
                       value={prodBarcode}
                       onChange={(e) => setProdBarcode(e.target.value)}
@@ -2027,10 +2067,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                  <label className="inline-flex items-center gap-2 px-3 py-1.5 border border-[#C9C5B8] dark:border-[#294735] rounded cursor-pointer">
+                  <label htmlFor="admin-prod-photo" className="inline-flex items-center gap-2 px-3 py-1.5 border border-[#C9C5B8] dark:border-[#294735] rounded cursor-pointer">
                     <Upload className="w-3.5 h-3.5" />
                     <span>Upload / Replace Product Photo</span>
                     <input
+                      id="admin-prod-photo"
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
                       onChange={async (e) => {
@@ -2074,7 +2115,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
               {/* Search Products */}
               <div>
+                <label htmlFor="admin-product-search" className="sr-only">
+                  Search catalog by product name or barcode
+                </label>
                 <input
+                  id="admin-product-search"
                   type="search"
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
@@ -2388,7 +2433,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   <p className="text-xs text-[#17201B]/75 dark:text-[#C9C5B8] leading-relaxed">
                     Select a <code>711acks-v1.0</code> backup file. Schema integrity and image manifest completeness are verified before destructive restoration.
                   </p>
+                  <label htmlFor="admin-backup-file" className="sr-only">
+                    Select backup JSON file to restore
+                  </label>
                   <input
+                    id="admin-backup-file"
                     type="file"
                     accept="application/json"
                     onChange={handleBackupFileSelect}
@@ -2495,10 +2544,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </div>
 
                 <div className="space-y-2 pt-3 border-t border-[#C9C5B8]/30 dark:border-[#294735]">
-                  <label className="block font-semibold">
+                  <label htmlFor="admin-maint-headline" className="block font-semibold">
                     Custom Maintenance Headline
                   </label>
                   <input
+                    id="admin-maint-headline"
                     type="text"
                     value={maintTitleDraft}
                     onChange={(e) => setMaintTitleDraft(e.target.value)}
@@ -2507,10 +2557,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block font-semibold">
+                  <label htmlFor="admin-maint-message" className="block font-semibold">
                     Custom Maintenance Message
                   </label>
                   <textarea
+                    id="admin-maint-message"
                     rows={3}
                     value={maintMsgDraft}
                     onChange={(e) => setMaintMsgDraft(e.target.value)}

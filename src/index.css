@@ -66,22 +66,40 @@
 
   @media (prefers-reduced-motion: reduce) {
     html {
-      scroll-behavior: auto;
+      scroll-behavior: auto !important;
     }
 
     *,
     *::before,
     *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
       scroll-behavior: auto !important;
     }
 
+    /* Suppress decorative/vestibular animations without breaking status spinners or JS callbacks */
+    *:not(.animate-spin):not([class*="animate-spin"]):not([aria-busy="true"]) {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+
+    .animate-spin,
+    [class*="animate-spin"] {
+      animation-duration: 1s !important;
+      animation-iteration-count: infinite !important;
+    }
+
+    /* Disable vestibular transforms, zooms, lifts, and interactive bounces */
     .pressable:active {
       transform: none !important;
     }
 
-    .surface-card-interactive:hover {
+    .surface-card-interactive,
+    .surface-card-interactive:hover,
+    .surface-card-interactive:active {
+      transform: none !important;
+    }
+
+    .hover-zoom-img,
+    .group:hover .hover-zoom-img {
       transform: none !important;
     }
   }
