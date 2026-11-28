@@ -6,3 +6,15 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local AI coding agent harnesses & skill locks
+.agent/
+.agents/
+.aider-desk/
+.claude/
+.codex/
+.cursor/
+.github/agents/
+.github/hooks/
+.github/skills/
+skills-lock.json

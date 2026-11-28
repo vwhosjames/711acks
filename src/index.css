@@ -144,6 +144,10 @@
   position: relative;
 }
 
+.hit-target-44:is(.absolute, [class*="absolute"]) {
+  position: absolute;
+}
+
 .hit-target-44::before {
   content: '';
   position: absolute;
@@ -201,6 +205,24 @@
   .hover-border-accent:hover {
     border-color: var(--border-hairline-hover);
   }
+
+  /* Desktop fine-pointer hover/focus reveal for unliked heart pills; always visible on touch or liked */
+  .like-pill-reveal:not([data-liked="true"]) {
+    opacity: 0;
+    transition-property: transform, opacity, background-color, border-color;
+    transition-duration: 180ms;
+    transition-timing-function: var(--ease-out);
+  }
+
+  .group:hover .like-pill-reveal:not([data-liked="true"]):not(:disabled),
+  .group:focus-within .like-pill-reveal:not([data-liked="true"]):not(:disabled) {
+    opacity: 1;
+  }
+
+  .group:hover .like-pill-reveal:not([data-liked="true"]):disabled,
+  .group:focus-within .like-pill-reveal:not([data-liked="true"]):disabled {
+    opacity: 0.6;
+  }
 }
 
 /* Multi-stop eased gradients (eliminates 2-stop banding and hard edges) */
@@ -230,9 +252,10 @@
 .card-scrim-bottom {
   background: linear-gradient(
     to top,
-    rgba(23, 32, 27, 0.62) 0%,
-    rgba(23, 32, 27, 0.34) 28%,
-    rgba(23, 32, 27, 0.12) 56%,
+    rgba(23, 32, 27, 0.96) 0%,
+    rgba(23, 32, 27, 0.82) 24%,
+    rgba(23, 32, 27, 0.5) 48%,
+    rgba(23, 32, 27, 0.16) 72%,
     rgba(23, 32, 27, 0) 100%
   );
 }
@@ -244,4 +267,46 @@
 
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Desktop fine-pointer QR toggle (hidden on touch devices) */
+.desktop-pointer-qr {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .desktop-pointer-qr {
+    display: inline-flex;
+  }
+}
+
+@keyframes checklistTickPop {
+  0% {
+    transform: scale(0.84);
+  }
+  65% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.checklist-tick-pop {
+  animation: checklistTickPop 200ms var(--ease-out) both;
+}
+
+@keyframes aboutPanelEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.about-panel-enter {
+  animation: aboutPanelEnter 180ms var(--ease-out) both;
 }
